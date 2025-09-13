@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 8317122154676618167}
   - component: {fileID: 1430352155671606017}
   - component: {fileID: 2960873115409452054}
-  - component: {fileID: 4849332994126428302}
+  - component: {fileID: 1821123221538798696}
   - component: {fileID: -6329577232714417219}
   m_Layer: 0
   m_Name: Enemy_Blue
@@ -111,7 +111,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: -4846801837305543773, guid: d4b3ef5e7f18e6542a478cc0540dc202, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -149,8 +149,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &4849332994126428302
-CircleCollider2D:
+--- !u!70 &1821123221538798696
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -184,7 +184,8 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Size: {x: 0.29, y: 0.86}
+  m_Direction: 0
 --- !u!114 &-6329577232714417219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,7 +202,7 @@ MonoBehaviour:
   rotationSpeed: 50
   moveDirection: {x: 0, y: -1}
   isHorizontalEnemy: 1
-  horizontalRange: 2.5
+  horizontalRange: 3
   horizontalSpeed: 5
   verticalSpeed: 2
   maxHealth: 50
@@ -221,7 +222,7 @@ MonoBehaviour:
   nextFireTime: 0
   player: {fileID: 0}
   isDead: 0
-  blueColor: {r: 0, g: 0, b: 1, a: 1}
+  blueColor: {r: 1, g: 1, b: 1, a: 1}
   blueScoreValue: 10
   blueHealth: 40
   blueMoveSpeed: 1

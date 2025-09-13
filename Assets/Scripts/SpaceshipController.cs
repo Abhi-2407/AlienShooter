@@ -174,15 +174,6 @@ public class SpaceshipController : MonoBehaviour
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
-            switch (spaceshipType)
-            {
-                case SpaceshipType.Red:
-                    spaceshipColor = Color.red;
-                    break;
-                case SpaceshipType.Blue:
-                    spaceshipColor = Color.blue;
-                    break;
-            }
             spriteRenderer.color = spaceshipColor;
         }
     }
