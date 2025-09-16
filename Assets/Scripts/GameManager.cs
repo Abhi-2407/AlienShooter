@@ -1,20 +1,53 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
+
+public enum GameState
+{
+    DEFAULT,
+    START,
+    OVER
+}
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Game Settings")]
-    public int score = 0;
-    public int highScore = 0;
-    public int lives = 3;
-    public bool isGameOver = false;
+    //[Header("Game Settings")]
+    //public int score = 0;
+    //public int highScore = 0;
+    //public int lives = 3;
+
+    [Header("Bot Settings")]
+    public int botDifficulty = 0;
+    public bool IsSinglePlayerMode;
+    public GameObject waitingForPlayersUI;
+
+    [Header("Game Logic")]
+    public bool isPlayer1Turn = true; // true = player1's turn, false = player2's turn
+    public GameState gameState = GameState.DEFAULT;
     public bool isPaused = false;
-    
+
+    [Header("Countdown Settings")]
+    private bool isCountdownRunning = false; // Track if countdown is currently running   
+    public GameObject countdownPanel;
+    public TextMeshProUGUI countdownText;
+    public float countdownDuration = 1f; // Duration for each countdown number
+
+    [Header("Specific references")]
+    public GameTimer gameTimer;
+
+    [Header("Game Over UI")]
+    public GameObject GameoverScreen;
+    public GameObject YouWin;
+    public GameObject YouLoss;
+    public GameObject Tie;
+
+
     [Header("Spaceship Scoring")]
-    public int redSpaceshipScore = 0;
-    public int blueSpaceshipScore = 0;
-    public int totalSpaceshipScore = 0;
-    
+    public int player1Score = 0;
+    public int player2Score = 0;
+
     [Header("Game State")]
     public float gameTime = 0f;
     public int wave = 1;
@@ -43,7 +76,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Load high score from PlayerPrefs
-        highScore = PlayerPrefs.GetInt("HighScore", 0);
+        //highScore = PlayerPrefs.GetInt("HighScore", 0);
         
         // Initialize UI
         if (uiManager == null)
@@ -63,7 +96,7 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        if (!isGameOver && !isPaused)
+        if (gameState == GameState.START)
         {
             gameTime += Time.deltaTime;
             UpdateUI();
@@ -74,20 +107,13 @@ public class GameManager : MonoBehaviour
         {
             TogglePause();
         }
-        
-        // Handle restart input
-        if (isGameOver && Input.GetKeyDown(KeyCode.R))
-        {
-            RestartGame();
-        }
     }
     
     public void StartGame()
     {
-        isGameOver = false;
-        isPaused = false;
-        score = 0;
-        lives = 3;
+        gameState = GameState.START;
+        //score = 0;
+        //lives = 3;
         gameTime = 0f;
         wave = 1;
         enemiesKilled = 0;
@@ -95,47 +121,133 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         UpdateUI();
     }
-    
+
+
+    public void StartCountdown()
+    {
+        StartCoroutine(CountdownSequence());
+    }
+
+    private IEnumerator CountdownSequence()
+    {
+        isCountdownRunning = true;
+
+        // Show countdown panel
+        if (countdownPanel != null)
+        {
+            countdownPanel.SetActive(true);
+        }
+
+        for (int i = 3; i >= 0; i--)
+        {
+            string txt = i.ToString();
+
+            if (i == 0) txt = "GO!";
+            AssignTime(txt);
+            yield return new WaitForSeconds(countdownDuration);
+        }
+
+        // Hide countdown panel
+        if (countdownPanel != null)
+        {
+            countdownPanel.SetActive(false);
+        }
+
+        isCountdownRunning = false;
+
+        // Start multiplayer timer
+        if (gameTimer != null)
+        {
+            gameTimer.StartTimer();
+        }
+
+        // Initialize the game after countdown
+        InitializeGame();
+    }
+
+    public void InitializeGame()
+    {
+        player1Score = 0;
+        player2Score = 0;
+        gameState = GameState.START;
+    }
+
+
+    void AssignTime(string txt)
+    {
+        if (countdownText != null)
+        {
+            countdownText.text = txt;
+            countdownText.transform.localScale = Vector3.zero;
+            countdownText.transform.DOScale(Vector3.one, countdownDuration * 0.3f).SetEase(Ease.OutBack);
+        }
+    }
+
+    // Method to change bot difficulty during runtime
+    public void SetBotDifficulty(int difficulty)
+    {
+        botDifficulty = difficulty;
+    }
+
+    public void InitializeSinglePlayerGame()
+    {
+        Debug.Log("[GameManager] Initializing single player game");
+
+        IsSinglePlayerMode = true;
+        StartCountdown();
+    }
+
+    public void InitializeMultiplayerGame()
+    {
+        Debug.Log("[GameInitializer] Initializing multiplayer game");
+
+        // Hide waiting UI, show game start UI
+        if (waitingForPlayersUI != null)
+            waitingForPlayersUI.SetActive(false);
+
+        IsSinglePlayerMode = false;
+        StartCountdown();
+    }
+
     public void AddScore(int points)
     {
-        if (isGameOver) return;
-        
-        score += points;
-        enemiesKilled++;
-        
-        // Check for high score
-        if (score > highScore)
-        {
-            highScore = score;
-            PlayerPrefs.SetInt("HighScore", highScore);
-        }
-        
-        // Check for wave progression
-        CheckWaveProgression();
-        
-        UpdateUI();
+       // if (gameState == GameState.OVER) return;
+
+       // score += points;
+       // enemiesKilled++;
+
+       // // Check for high score
+       // if (score > highScore)
+       // {
+       //     highScore = score;
+       //     PlayerPrefs.SetInt("HighScore", highScore);
+       // }
+
+       // Check for wave progression
+
+       //CheckWaveProgression();
+
+       //UpdateUI();
     }
     
     public void AddSpaceshipScore(SpaceshipController.SpaceshipType spaceshipType, int points)
     {
-        if (isGameOver) return;
+        if (gameState == GameState.OVER) return;
         
         switch (spaceshipType)
         {
             case SpaceshipController.SpaceshipType.Red:
-                redSpaceshipScore += points;
+                player2Score += points;
+                uiManager.player2ScoreTxt.text = "" + player2Score;
                 break;
             case SpaceshipController.SpaceshipType.Blue:
-                blueSpaceshipScore += points;
+                player1Score += points;
+                uiManager.player1ScoreTxt.text = "" + player1Score;
                 break;
         }
         
-        totalSpaceshipScore = redSpaceshipScore + blueSpaceshipScore;
-        
         // Add to main score as well
         AddScore(points);
-        
-        Debug.Log($"{spaceshipType} spaceship scored {points} points! Total: {totalSpaceshipScore}");
     }
     
     void CheckWaveProgression()
@@ -166,20 +278,20 @@ public class GameManager : MonoBehaviour
     
     public void LoseLife()
     {
-        if (isGameOver) return;
+        //if (gameState == GameState.OVER) return;
         
-        lives--;
-        UpdateUI();
+        //lives--;
+        //UpdateUI();
         
-        if (lives <= 0)
-        {
-            GameOver();
-        }
-        else
-        {
-            // Respawn player or show respawn message
-            RespawnPlayer();
-        }
+        //if (lives <= 0)
+        //{
+        //    GameOver();
+        //}
+        //else
+        //{
+        //    // Respawn player or show respawn message
+        //    RespawnPlayer();
+        //}
     }
     
     void RespawnPlayer()
@@ -201,18 +313,34 @@ public class GameManager : MonoBehaviour
     
     public void GameOver()
     {
-        isGameOver = true;
+        gameState = GameState.OVER;
         Time.timeScale = 0f;
-        
-        if (uiManager != null)
+
+        if(player1Score > player2Score)
         {
-            uiManager.ShowGameOver(score, highScore);
+            YouWin.SetActive(true);
+            YouLoss.SetActive(false);
+            Tie.SetActive(false);
         }
+        else if(player1Score < player2Score)
+        {
+            YouLoss.SetActive(true);
+            YouWin.SetActive(false);
+            Tie.SetActive(false);
+        }
+        else
+        {
+            Tie.SetActive(true);
+            YouWin.SetActive(false);
+            YouLoss.SetActive(false);
+        }
+        
+        GameoverScreen.SetActive(true);
     }
     
     public void TogglePause()
     {
-        if (isGameOver) return;
+        if (gameState == GameState.OVER) return;
         
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0f : 1f;
@@ -236,29 +364,29 @@ public class GameManager : MonoBehaviour
     
     void UpdateUI()
     {
-        if (uiManager != null)
-        {
-            uiManager.UpdateScore(score);
-            uiManager.UpdateLives(lives);
-            uiManager.UpdateWave(wave);
-            uiManager.UpdateTime(gameTime);
-        }
+        //if (uiManager != null)
+        //{
+        //    uiManager.UpdateScore(score);
+        //    uiManager.UpdateLives(lives);
+        //    uiManager.UpdateWave(wave);
+        //    uiManager.UpdateTime(gameTime);
+        //}
     }
     
-    public int GetScore()
-    {
-        return score;
-    }
+    //public int GetScore()
+    //{
+    //    return score;
+    //}
     
-    public int GetHighScore()
-    {
-        return highScore;
-    }
+    //public int GetHighScore()
+    //{
+    //    return highScore;
+    //}
     
-    public int GetLives()
-    {
-        return lives;
-    }
+    //public int GetLives()
+    //{
+    //    return lives;
+    //}
     
     public int GetWave()
     {

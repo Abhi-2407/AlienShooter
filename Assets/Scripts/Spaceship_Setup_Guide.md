@@ -35,10 +35,14 @@ Create these tags in Unity:
 
 3. **Configure SpaceshipController**:
    - Spaceship Type: Red
-   - Move Speed: 3
+   - Move Speed: 2
    - Score Value: 50
    - Horizontal Range: 4
-   - Vertical Speed: 2
+   - Stop Duration: 2
+   - Move Duration: 3
+   - Direction Change Chance: 0.3
+   - Stop Duration Variation: 1
+   - Move Duration Variation: 1
 
 4. **Set Tag**: "Spaceship"
 
@@ -57,10 +61,14 @@ Create these tags in Unity:
 
 3. **Configure SpaceshipController**:
    - Spaceship Type: Blue
-   - Move Speed: 3
+   - Move Speed: 2
    - Score Value: 50
    - Horizontal Range: 4
-   - Vertical Speed: 2
+   - Stop Duration: 2
+   - Move Duration: 3
+   - Direction Change Chance: 0.3
+   - Stop Duration Variation: 1
+   - Move Duration Variation: 1
 
 4. **Set Tag**: "Spaceship"
 
@@ -124,9 +132,24 @@ Create these tags in Unity:
 
 ### Movement Pattern:
 - **Horizontal Movement**: Moves left and right within defined range
-- **Vertical Movement**: Slowly moves downward
-- **Direction Change**: Reverses when reaching range limits
+- **Stop and Go**: Alternates between moving and stopping for configurable durations
+- **Random Direction Changes**: Can randomly change direction during movement
 - **Screen Exit**: Destroyed when reaching bottom of screen
+
+### Movement Settings Explained:
+- **Move Speed**: How fast the spaceship moves horizontally (2 = slow, 5 = fast)
+- **Stop Duration**: Base duration for how long the spaceship stops (in seconds)
+- **Move Duration**: Base duration for how long the spaceship moves (in seconds)
+- **Stop Duration Variation**: Random variation added to stop duration (±variation seconds)
+- **Move Duration Variation**: Random variation added to move duration (±variation seconds)
+- **Direction Change Chance**: Probability of changing direction (0.0 = never, 1.0 = always)
+- **Horizontal Range**: Maximum distance from starting position before reversing
+
+### Random Timing System:
+- Each spaceship gets **unique random durations** for movement and stopping
+- Durations are recalculated after each stop-move cycle
+- **Example**: If Stop Duration = 2 and Stop Duration Variation = 1, actual stops will be 1-3 seconds
+- **Example**: If Move Duration = 3 and Move Duration Variation = 1, actual moves will be 2-4 seconds
 
 ### Collision Logic:
 - **Red Spaceship** + **Red Enemy** = Both destroyed + Score added + Red spaceship respawns after 1 second

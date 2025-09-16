@@ -6,6 +6,10 @@ public class UIManager : MonoBehaviour
 {
     [Header("UI References")]
     public TextMeshProUGUI scoreText;
+
+    public TextMeshProUGUI player1ScoreTxt;
+    public TextMeshProUGUI player2ScoreTxt;
+
     public TextMeshProUGUI highScoreText;
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI waveText;
@@ -14,7 +18,12 @@ public class UIManager : MonoBehaviour
     public Image healthBarFill;
     
     [Header("Game Over UI")]
-    public GameObject gameOverPanel;
+    public GameObject GameoverScreen;
+    public GameObject YouWin;
+    public GameObject YouLoss;
+    public GameObject Tie;
+
+
     public TextMeshProUGUI finalScoreText;
     public TextMeshProUGUI newHighScoreText;
     public Button restartButton;
@@ -69,8 +78,8 @@ public class UIManager : MonoBehaviour
         UpdateTime(0f);
         
         // Hide panels
-        if (gameOverPanel != null)
-            gameOverPanel.SetActive(false);
+        if (GameoverScreen != null)
+            GameoverScreen.SetActive(false);
         if (pausePanel != null)
             pausePanel.SetActive(false);
         if (waveCompletePanel != null)
@@ -142,10 +151,10 @@ public class UIManager : MonoBehaviour
     
     public void ShowGameOver(int finalScore, int highScore)
     {
-        if (gameOverPanel != null)
+        if (GameoverScreen != null)
         {
-            gameOverPanel.SetActive(true);
-            
+            GameoverScreen.SetActive(true);
+
             if (finalScoreText != null)
             {
                 finalScoreText.text = "Final Score: " + finalScore.ToString();
@@ -239,3 +248,4 @@ public class UIManager : MonoBehaviour
         }
     }
 }
+

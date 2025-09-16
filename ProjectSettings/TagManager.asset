@@ -8,6 +8,9 @@ TagManager:
   - BlueEnemy
   - RedEnemy
   - Spaceship
+  - BlueLight
+  - RedLight
+  - Fish
   layers:
   - Default
   - TransparentFX

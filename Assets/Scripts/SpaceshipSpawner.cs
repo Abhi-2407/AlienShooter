@@ -129,7 +129,7 @@ public class SpaceshipSpawner : MonoBehaviour
         {
             controller.SetSpaceshipType(SpaceshipController.SpaceshipType.Red);
             controller.SetMoveSpeed(redSpaceshipSpeed);
-            controller.SetScoreValue(redSpaceshipScore);
+            //controller.SetScoreValue(redSpaceshipScore);
         }
         
         // Tag the spaceship
@@ -150,7 +150,7 @@ public class SpaceshipSpawner : MonoBehaviour
         {
             controller.SetSpaceshipType(SpaceshipController.SpaceshipType.Blue);
             controller.SetMoveSpeed(blueSpaceshipSpeed);
-            controller.SetScoreValue(blueSpaceshipScore);
+            //controller.SetScoreValue(blueSpaceshipScore);
         }
         
         // Tag the spaceship

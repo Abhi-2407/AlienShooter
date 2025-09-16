@@ -128,3 +128,4 @@ public class PowerUp : MonoBehaviour
         duration = newDuration;
     }
 }
+

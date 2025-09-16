@@ -203,7 +203,7 @@ MonoBehaviour:
   moveDirection: {x: 0, y: -1}
   isHorizontalEnemy: 1
   horizontalRange: 3
-  horizontalSpeed: 5
+  horizontalSpeed: 10
   verticalSpeed: 2
   maxHealth: 50
   currentHealth: 0

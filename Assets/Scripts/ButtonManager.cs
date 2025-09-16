@@ -11,9 +11,9 @@ public class ButtonManager : MonoBehaviour
     public EnemySpawner enemySpawner;
     
     [Header("Button Settings")]
-    public float buttonCooldown = 2f;
-    public Color activeButtonColor = Color.green;
-    public Color inactiveButtonColor = Color.white;
+    public float buttonCooldown = 0.5f;
+    //public Color activeButtonColor = Color.green;
+    //public Color inactiveButtonColor = Color.white;
     
     private bool redButtonOnCooldown = false;
     private bool blueButtonOnCooldown = false;
@@ -158,7 +158,7 @@ public class ButtonManager : MonoBehaviour
             Image redButtonImage = redButton.GetComponent<Image>();
             if (redButtonImage != null)
             {
-                redButtonImage.color = redButtonOnCooldown ? inactiveButtonColor : activeButtonColor;
+                //redButtonImage.color = redButtonOnCooldown ? inactiveButtonColor : activeButtonColor;
             }
         }
         
@@ -167,7 +167,7 @@ public class ButtonManager : MonoBehaviour
             Image blueButtonImage = blueButton.GetComponent<Image>();
             if (blueButtonImage != null)
             {
-                blueButtonImage.color = blueButtonOnCooldown ? inactiveButtonColor : activeButtonColor;
+                //blueButtonImage.color = blueButtonOnCooldown ? inactiveButtonColor : activeButtonColor;
             }
         }
     }
@@ -187,3 +187,4 @@ public class ButtonManager : MonoBehaviour
         return blueButtonOnCooldown;
     }
 }
+
