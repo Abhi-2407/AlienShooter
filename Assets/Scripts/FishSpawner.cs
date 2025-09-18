@@ -64,55 +64,53 @@ public class FishSpawner : MonoBehaviour
                 swimAreaSize = spawnAreaSize;
             }
         }
-        
-        if (spawnOnStart)
-        {
-            StartSpawning();
-        }
-        
+
         // Initialize fish count tracking
         previousFishCount = 0;
     }
     
     void Update()
     {
-        // Clean up destroyed fish from the list
-        int currentFishCount = spawnedFish.Count;
-        spawnedFish.RemoveAll(fish => fish == null);
-        int actualFishCount = spawnedFish.Count;
-        
-        // Check if any fish were destroyed
-        if (autoRespawnOnDestroy && actualFishCount < previousFishCount)
+        if (GameManager.Instance.gameState == GameState.START)
         {
-            int fishDestroyed = previousFishCount - actualFishCount;
-            Debug.Log($"Fish destroyed! Count: {previousFishCount} -> {actualFishCount}. Destroyed: {fishDestroyed}");
-            
-            // Schedule respawn if enough time has passed
-            if (Time.time - lastRespawnTime >= respawnDelayOnDestroy)
+            // Clean up destroyed fish from the list
+            int currentFishCount = spawnedFish.Count;
+            spawnedFish.RemoveAll(fish => fish == null);
+            int actualFishCount = spawnedFish.Count;
+
+            // Check if any fish were destroyed
+            if (autoRespawnOnDestroy && actualFishCount < previousFishCount)
             {
-                StartCoroutine(RespawnDestroyedFish(fishDestroyed));
+                int fishDestroyed = previousFishCount - actualFishCount;
+                Debug.Log($"Fish destroyed! Count: {previousFishCount} -> {actualFishCount}. Destroyed: {fishDestroyed}");
+
+                // Schedule respawn if enough time has passed
+                if (Time.time - lastRespawnTime >= respawnDelayOnDestroy)
+                {
+                    StartCoroutine(RespawnDestroyedFish(fishDestroyed));
+                    lastRespawnTime = Time.time;
+                }
+            }
+
+            // Update previous count
+            previousFishCount = actualFishCount;
+
+            // Handle continuous spawning
+            if (continuousSpawning && actualFishCount < maxFishCount)
+            {
+                if (!isSpawning)
+                {
+                    StartCoroutine(ContinuousSpawnRoutine());
+                }
+            }
+
+            // Auto-respawn to maintain target count
+            if (autoRespawnOnDestroy && actualFishCount < targetFishCount && Time.time - lastRespawnTime >= respawnDelayOnDestroy)
+            {
+                int fishNeeded = targetFishCount - actualFishCount;
+                StartCoroutine(RespawnDestroyedFish(fishNeeded));
                 lastRespawnTime = Time.time;
             }
-        }
-        
-        // Update previous count
-        previousFishCount = actualFishCount;
-        
-        // Handle continuous spawning
-        if (continuousSpawning && actualFishCount < maxFishCount)
-        {
-            if (!isSpawning)
-            {
-                StartCoroutine(ContinuousSpawnRoutine());
-            }
-        }
-        
-        // Auto-respawn to maintain target count
-        if (autoRespawnOnDestroy && actualFishCount < targetFishCount && Time.time - lastRespawnTime >= respawnDelayOnDestroy)
-        {
-            int fishNeeded = targetFishCount - actualFishCount;
-            StartCoroutine(RespawnDestroyedFish(fishNeeded));
-            lastRespawnTime = Time.time;
         }
     }
     

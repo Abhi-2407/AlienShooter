@@ -36,7 +36,7 @@ public class RedEnemy : EnemyController
     void Update()
     {
         // Red enemies are more aggressive
-        if (!isDead)
+        if (!isDead && GameManager.Instance.gameState == GameState.START)
         {
             HandleMovement();
             HandleShooting();

@@ -36,7 +36,7 @@ public class BlueEnemy : EnemyController
     void Update()
     {
         // Blue enemies are more defensive
-        if (!isDead)
+        if (!isDead && GameManager.Instance.gameState == GameState.START)
         {
             HandleMovement();
             HandleShooting();

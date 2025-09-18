@@ -48,6 +48,10 @@ public class GameManager : MonoBehaviour
     public int player1Score = 0;
     public int player2Score = 0;
 
+    [Header("UI References")]
+    public TextMeshProUGUI player1Txt;
+    public TextMeshProUGUI player2Txt;
+
     [Header("Game State")]
     public float gameTime = 0f;
     public int wave = 1;
@@ -56,7 +60,10 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     public UIManager uiManager;
     public EnemySpawner enemySpawner;
-    
+    public FishSpawner fishSpawner;
+
+    public NetworkPlayer localPlayer;
+
     public static GameManager Instance { get; private set; }
     
     void Awake()
@@ -91,7 +98,7 @@ public class GameManager : MonoBehaviour
         }
         
         // Start the game
-        StartGame();
+        //StartGame();
     }
     
     void Update()
@@ -111,7 +118,10 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
+        player1Score = 0;
+        player2Score = 0;
         gameState = GameState.START;
+
         //score = 0;
         //lives = 3;
         gameTime = 0f;
@@ -120,6 +130,8 @@ public class GameManager : MonoBehaviour
         
         Time.timeScale = 1f;
         UpdateUI();
+
+        fishSpawner.StartSpawning();
     }
 
 
@@ -167,9 +179,8 @@ public class GameManager : MonoBehaviour
 
     public void InitializeGame()
     {
-        player1Score = 0;
-        player2Score = 0;
-        gameState = GameState.START;
+        // Start the game
+        StartGame();
     }
 
 

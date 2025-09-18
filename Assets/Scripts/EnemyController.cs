@@ -54,33 +54,16 @@ public class EnemyController : MonoBehaviour
         {
             player = playerObj.transform;
         }
-        
-        // Set initial movement based on enemy type
-        if (isHorizontalEnemy)
-        {
-            // Horizontal enemies move slowly downward and side to side
-            if (rb != null)
-            {
-                rb.linearVelocity = new Vector2(horizontalSpeed, 0);
-            }
-        }
-        else
-        {
-            // Regular enemies move straight down
-            if (rb != null)
-            {
-                //rb.linearVelocity = moveDirection * moveSpeed;
-            }
-        }
     }
-    
+
     void Update()
     {
-        if (isDead) return;
-        
-        HandleMovement();
-        HandleShooting();
-        HandleRotation();
+        //if (!isDead && GameManager.Instance.gameState == GameState.START)
+        //{
+        //    HandleMovement();
+        //    HandleShooting();
+        //    HandleRotation();
+        //}
     }
 
     public void HandleMovement()

@@ -15,8 +15,14 @@ public class ButtonManager : MonoBehaviour
     //public Color activeButtonColor = Color.green;
     //public Color inactiveButtonColor = Color.white;
     
+    [Header("Bot Settings")]
+    public bool enableBotMode = false;
+    public float botClickInterval = 2f;
+    public bool botClickRedButton = true;
+    
     private bool redButtonOnCooldown = false;
     private bool blueButtonOnCooldown = false;
+    private float botTimer = 0f;
     
     void Start()
     {
@@ -40,11 +46,17 @@ public class ButtonManager : MonoBehaviour
         // Initialize button colors
         UpdateButtonColors();
     }
-    
+
     void Update()
     {
         // Update button states
         UpdateButtonStates();
+
+        // Handle bot functionality
+        if (enableBotMode && GameManager.Instance.gameState == GameState.START)
+        {
+            HandleBotBehavior();
+        }
     }
     
     public void OnRedButtonClicked()
@@ -185,6 +197,84 @@ public class ButtonManager : MonoBehaviour
     public bool IsBlueButtonOnCooldown()
     {
         return blueButtonOnCooldown;
+    }
+    
+    /// <summary>
+    /// Bot method that handles automatic red button clicking
+    /// </summary>
+    void HandleBotBehavior()
+    {
+        botTimer += Time.deltaTime;
+        
+        if (botTimer >= botClickInterval)
+        {
+            botTimer = 0f;
+            
+            // Check if we should click red button
+            if (botClickRedButton)
+            {
+                BotClickRedButton();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Bot method to automatically trigger red button functionality
+    /// </summary>
+    public void BotClickRedButton()
+    {
+        // Check if button is available (not on cooldown and enemies exist)
+        if (redButtonOnCooldown) return;
+        
+        int redEnemyCount = FindObjectsOfType<RedEnemy>().Length;
+        if (redEnemyCount <= 0) return;
+        
+        Debug.Log("Bot: Automatically clicking Red Button!");
+        
+        // Call the existing OnRedButtonClicked method
+        OnRedButtonClicked();
+    }
+    
+    /// <summary>
+    /// Enable or disable bot mode
+    /// </summary>
+    public void SetBotMode(bool enabled)
+    {
+        enableBotMode = enabled;
+        botTimer = 0f; // Reset timer when toggling bot mode
+    }
+    
+    /// <summary>
+    /// Set bot click interval
+    /// </summary>
+    public void SetBotClickInterval(float interval)
+    {
+        botClickInterval = Mathf.Max(0.1f, interval); // Minimum 0.1 seconds
+    }
+    
+    /// <summary>
+    /// Set whether bot should click red button
+    /// </summary>
+    public void SetBotClickRedButton(bool clickRed)
+    {
+        botClickRedButton = clickRed;
+    }
+    
+    /// <summary>
+    /// Get current bot mode status
+    /// </summary>
+    public bool IsBotModeEnabled()
+    {
+        return enableBotMode;
+    }
+    
+    /// <summary>
+    /// Manually trigger bot red button click (useful for testing)
+    /// </summary>
+    [ContextMenu("Bot Click Red Button")]
+    public void ManualBotClickRedButton()
+    {
+        BotClickRedButton();
     }
 }
 

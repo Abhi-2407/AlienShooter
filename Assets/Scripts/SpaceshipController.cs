@@ -61,7 +61,8 @@ public class SpaceshipController : MonoBehaviour
     {
         if (!isActive) return;
 
-        HandleMovement();
+        if (GameManager.Instance.gameState == GameState.START)
+            HandleMovement();
     }
 
     void HandleMovement()
