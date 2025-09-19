@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5229796173071540395}
   - component: {fileID: 2090322901456442165}
   - component: {fileID: 1925971192673108519}
+  - component: {fileID: 1144442634378136151}
   m_Layer: 0
   m_Name: SpaceShip_Blue
   m_TagString: Untagged
@@ -140,7 +141,7 @@ MonoBehaviour:
   spaceshipType: 1
   scoreValue: 1
   horizontalRange: 2.5
-  moveSpeed: 5
+  moveSpeed: 1
   stopDurationMin: 2
   stopDurationMax: 4
   moveDurationMin: 3
@@ -640,7 +641,31 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 2090322901456442165}
+  - {fileID: 1144442634378136151}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &1144442634378136151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892247583263975167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61e3c965e06016c4e931c571fc973a4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: Player
+  isLocalPlayer: 0
+  _playerID: 0
+  _PlayerName: 
+  _IsReady: 0
+  _IsMyTurn: 0
+  isGameStarted: 0
+  score: 0
+  localPlayerID: 0
+  isMine: 0
+  im1stPlayer: 0
 --- !u!1 &2811421569860294518
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,5 @@
+using Fusion;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpaceshipController : MonoBehaviour
@@ -40,7 +42,7 @@ public class SpaceshipController : MonoBehaviour
     }
 
     private Rigidbody2D rb;
-    private bool isActive = true;
+    public bool isActive = true;
 
     void Start()
     {
@@ -55,6 +57,11 @@ public class SpaceshipController : MonoBehaviour
 
         // Initialize movement timing
         nextDirectionChangeTime = Time.time + Random.Range(currentMoveDuration * 0.5f, currentMoveDuration * 1.5f);
+    }
+
+    void OnEnable()
+    {
+        
     }
 
     void Update()
@@ -215,18 +222,22 @@ public class SpaceshipController : MonoBehaviour
 
         isActive = false;
 
+        rb.linearVelocity = Vector2.zero;
+
         // Notify spaceship spawner
-        SpaceshipSpawner spawner = FindObjectOfType<SpaceshipSpawner>();
-        if (spawner != null)
-        {
-            spawner.OnSpaceshipDestroyed(spaceshipType);
-        }
+        //SpaceshipSpawner spawner = FindObjectOfType<SpaceshipSpawner>();
+        //if (spawner != null)
+        //{
+        //    spawner.OnSpaceshipDestroyed(spaceshipType);
+        //}
 
         // Create explosion effect
         CreateExplosionEffect();
 
+        GameManager.Instance.HandleSpaceShip(gameObject, startPosition);
+
         // Destroy spaceship
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     void CreateExplosionEffect()

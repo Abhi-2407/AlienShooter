@@ -13,11 +13,11 @@ public class SpaceshipSpawner : MonoBehaviour
     public float spawnInterval = 10f;
     public int maxSpaceships = 2; // 1 red + 1 blue
     
-    [Header("Spaceship Settings")]
-    public float redSpaceshipSpeed = 3f;
-    public float blueSpaceshipSpeed = 3f;
-    public int redSpaceshipScore = 50;
-    public int blueSpaceshipScore = 50;
+    //[Header("Spaceship Settings")]
+    //public float redSpaceshipSpeed = 3f;
+    //public float blueSpaceshipSpeed = 3f;
+    //public int redSpaceshipScore = 50;
+    //public int blueSpaceshipScore = 50;
     
     [Header("Spawn Control")]
     public bool autoSpawn = true;
@@ -33,28 +33,31 @@ public class SpaceshipSpawner : MonoBehaviour
     
     void Start()
     {
-        mainCamera = Camera.main;
-        screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
-        
-        // Create spawn points if none exist
-        if (spawnPoints == null || spawnPoints.Length == 0)
+        if (GameManager.Instance.IsSinglePlayerMode)
         {
-            CreateSpawnPoints();
-        }
-        
-        if (spawnOnStart)
-        {
-            SpaceShipPair();
+            mainCamera = Camera.main;
+            screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
+
+            // Create spawn points if none exist
+            if (spawnPoints == null || spawnPoints.Length == 0)
+            {
+                CreateSpawnPoints();
+            }
+
+            if (spawnOnStart)
+            {
+                SpaceShipPair();
+            }
         }
     }
     
     void Update()
     {
         // Count current spaceships
-        currentSpaceshipCount = GameObject.FindGameObjectsWithTag("Spaceship").Length;
+        //currentSpaceshipCount = GameObject.FindGameObjectsWithTag("Spaceship").Length;
         
         // Check if spaceships are active
-        CheckSpaceshipStatus();
+        //CheckSpaceshipStatus();
     }
     
     void CreateSpawnPoints()
@@ -128,7 +131,7 @@ public class SpaceshipSpawner : MonoBehaviour
         if (controller != null)
         {
             controller.SetSpaceshipType(SpaceshipController.SpaceshipType.Red);
-            controller.SetMoveSpeed(redSpaceshipSpeed);
+            //controller.SetMoveSpeed(redSpaceshipSpeed);
             //controller.SetScoreValue(redSpaceshipScore);
         }
         
@@ -149,7 +152,7 @@ public class SpaceshipSpawner : MonoBehaviour
         if (controller != null)
         {
             controller.SetSpaceshipType(SpaceshipController.SpaceshipType.Blue);
-            controller.SetMoveSpeed(blueSpaceshipSpeed);
+            //controller.SetMoveSpeed(blueSpaceshipSpeed);
             //controller.SetScoreValue(blueSpaceshipScore);
         }
         

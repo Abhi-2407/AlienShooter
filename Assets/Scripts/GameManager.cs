@@ -43,7 +43,6 @@ public class GameManager : MonoBehaviour
     public GameObject YouLoss;
     public GameObject Tie;
 
-
     [Header("Spaceship Scoring")]
     public int player1Score = 0;
     public int player2Score = 0;
@@ -61,6 +60,9 @@ public class GameManager : MonoBehaviour
     public UIManager uiManager;
     public EnemySpawner enemySpawner;
     public FishSpawner fishSpawner;
+
+    [Header("Spawn Settings")]
+    public Transform[] spawnPoints;
 
     public NetworkPlayer localPlayer;
 
@@ -407,5 +409,19 @@ public class GameManager : MonoBehaviour
     public float GetGameTime()
     {
         return gameTime;
+    }
+
+    public void HandleSpaceShip(GameObject go, Vector3 pos)
+    {
+        StartCoroutine(IEHandleSpaceShip(go, pos));
+    }
+
+    public IEnumerator IEHandleSpaceShip(GameObject go, Vector3 pos)
+    {
+        go.SetActive(false);
+        go.transform.position = pos;
+        yield return new WaitForSeconds(1.0f);
+        go.GetComponent<SpaceshipController>().isActive = true;
+        go.SetActive(true);
     }
 }

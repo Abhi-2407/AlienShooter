@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class ButtonManager : MonoBehaviour
 {
+    public static ButtonManager Instance; 
+
     [Header("Button References")]
     public Button redButton;
     public Button blueButton;
@@ -23,7 +25,21 @@ public class ButtonManager : MonoBehaviour
     private bool redButtonOnCooldown = false;
     private bool blueButtonOnCooldown = false;
     private float botTimer = 0f;
-    
+
+    void Awake()
+    {
+        // Singleton pattern
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
         // Find enemy spawner if not assigned
@@ -35,7 +51,8 @@ public class ButtonManager : MonoBehaviour
         // Setup button listeners
         if (redButton != null)
         {
-            redButton.onClick.AddListener(OnRedButtonClicked);
+            if (!GameManager.Instance.IsSinglePlayerMode)
+                redButton.onClick.AddListener(OnRedButtonClicked);
         }
         
         if (blueButton != null)
@@ -53,7 +70,7 @@ public class ButtonManager : MonoBehaviour
         UpdateButtonStates();
 
         // Handle bot functionality
-        if (enableBotMode && GameManager.Instance.gameState == GameState.START)
+        if (enableBotMode && GameManager.Instance.gameState == GameState.START && GameManager.Instance.IsSinglePlayerMode)
         {
             HandleBotBehavior();
         }
@@ -64,39 +81,57 @@ public class ButtonManager : MonoBehaviour
         if (redButtonOnCooldown) return;
         
         Debug.Log("Red Button Clicked!");
-        
+
+        if (!GameManager.Instance.IsSinglePlayerMode)
+            GameManager.Instance.localPlayer.RPC_OnRedButtonClicked();
+
+        OnRedButtonClicked_();
+    }
+
+    public void OnRedButtonClicked_()
+    {
         // Stop all red enemies from moving horizontally and make them come down
         StopRedEnemiesHorizontalMovement();
-        
+
         // Spawn new red enemy
         if (enemySpawner != null)
         {
             enemySpawner.SpawnRedEnemy();
         }
-        
+
         // Start cooldown
         StartCoroutine(RedButtonCooldown());
     }
-    
+
+
     public void OnBlueButtonClicked()
     {
         if (blueButtonOnCooldown) return;
         
         Debug.Log("Blue Button Clicked!");
-        
+
+        if (!GameManager.Instance.IsSinglePlayerMode)
+            GameManager.Instance.localPlayer.RPC_OnBlueButtonClicked();
+
+        OnBlueButtonClicked_();
+    }
+
+    public void OnBlueButtonClicked_()
+    {
         // Stop all blue enemies from moving horizontally and make them come down
         StopBlueEnemiesHorizontalMovement();
-        
+
         // Spawn new blue enemy
         if (enemySpawner != null)
         {
             enemySpawner.SpawnBlueEnemy();
         }
-        
+
         // Start cooldown
         StartCoroutine(BlueButtonCooldown());
     }
-    
+
+
     void StopRedEnemiesHorizontalMovement()
     {
         // Find all red enemies and stop their horizontal movement
@@ -266,15 +301,6 @@ public class ButtonManager : MonoBehaviour
     public bool IsBotModeEnabled()
     {
         return enableBotMode;
-    }
-    
-    /// <summary>
-    /// Manually trigger bot red button click (useful for testing)
-    /// </summary>
-    [ContextMenu("Bot Click Red Button")]
-    public void ManualBotClickRedButton()
-    {
-        BotClickRedButton();
     }
 }
 

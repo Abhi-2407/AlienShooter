@@ -59,6 +59,8 @@ public class NetworkPlayer : NetworkBehaviour
                 im1stPlayer = true;
                 localGameManager.isPlayer1Turn = false;
 
+                ButtonManager.Instance.blueButton.gameObject.SetActive(false);
+
                 localGameManager.player1Txt.text = "You";
                 localGameManager.player2Txt.text = "Opponent";
                 //localGameManager.Timer1Txt.text = "YOUR\nTURN";
@@ -69,6 +71,8 @@ public class NetworkPlayer : NetworkBehaviour
             else
             {
                 localGameManager.isPlayer1Turn = true;
+
+                ButtonManager.Instance.redButton.gameObject.SetActive(false);
 
                 localGameManager.player1Txt.text = "Opponent";
                 localGameManager.player2Txt.text = "You";
@@ -158,6 +162,26 @@ public class NetworkPlayer : NetworkBehaviour
         Debug.Log("[NetworkPlayer] Game started!");
         
         localGameManager.InitializeMultiplayerGame();
+    }
+
+    // RPC methods for player actions
+    //[Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    //[Rpc(RpcSources.All, RpcTargets.All)]
+    //[Rpc(RpcSources.All, RpcTargets.AllExceptInputAuthority)]
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    public void RPC_OnRedButtonClicked()
+    {
+        ButtonManager.Instance.OnRedButtonClicked_();
+
+        Debug.Log("RPC_RedButtonClick");
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    public void RPC_OnBlueButtonClicked()
+    {
+        ButtonManager.Instance.OnBlueButtonClicked_();
+
+        Debug.Log("RPC_BlueButtonClick");
     }
 
     private IEnumerator DisconnectAfterDelay(float delay)

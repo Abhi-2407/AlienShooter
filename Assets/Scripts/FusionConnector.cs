@@ -22,6 +22,14 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField]
     private NetworkObject networkPlayerPrefab;
 
+    [Header("Local Player Objects")]
+    [SerializeField]
+    private NetworkObject blueObjectPrefab; // Blue object for local player
+
+    [Header("Remote Player Objects")]
+    [SerializeField]
+    private NetworkObject redObjectPrefab; // Red object for remote player
+
     public NetworkRunner NetworkRunner => networkRunner;
 
     public GameManager gameManager;
@@ -145,20 +153,22 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
         {
             Debug.Log("[FusionConnector] 2 players joined - starting multiplayer game!");
 
-            // Spawn NetworkGridManager if it doesn't exist
-            if (UnityEngine.Object.FindObjectOfType<NetworkPlayer>() == null)
+
+            if (runner.IsSharedModeMasterClient)
             {
-                Debug.Log("[FusionConnector] Spawning NetworkPlayer...");
-                if (networkPlayerPrefab != null)
+                Debug.Log("I am the Master/Host in Shared Mode");
+                GameObject go1 = runner.Spawn(blueObjectPrefab).gameObject;
+                go1.transform.position = gameManager.spawnPoints[0].position;
+            }
+            else
+            {
+                if (player == runner.LocalPlayer)
                 {
-                    runner.Spawn(networkPlayerPrefab);
-                }
-                else
-                {
-                    Debug.LogError("[FusionConnector] NetworkPlayer prefab not assigned!");
+                    Debug.Log("I am just a Client");
+                    GameObject go2 = runner.Spawn(redObjectPrefab).gameObject;
+                    go2.transform.position = gameManager.spawnPoints[1].position;
                 }
             }
-
             gameManager.InitializeMultiplayerGame();
         }
     }
@@ -260,6 +270,160 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
                 reason,
                 "CONNECTION_FAILED"
             );
+        }
+    }
+
+    /// <summary>
+    /// Spawns player-specific objects based on local/remote player status
+    /// </summary>
+    private void SpawnPlayerObjects(NetworkRunner runner)
+    {
+        Debug.Log("[FusionConnector] Spawning player-specific objects...");
+
+        foreach (PlayerRef player in runner.ActivePlayers)
+        {
+            if (player == runner.LocalPlayer)
+            {
+                // Local player - spawn blue objects
+                SpawnBlueObjects(player);
+            }
+            else
+            {
+                // Remote player - spawn red objects
+                SpawnRedObjects(player);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Spawns blue objects for the local player
+    /// </summary>
+    private void SpawnBlueObjects(PlayerRef player)
+    {
+        Debug.Log($"[FusionConnector] Spawning blue objects for local player {player}");
+
+        //if (blueObjectPrefab != null)
+        //{
+        //    // Find a suitable spawn position for blue objects
+        //    Vector3 spawnPosition = GetSpawnPosition(true); // true for blue (left side)
+
+        //    GameObject blueObject = Instantiate(blueObjectPrefab, spawnPosition, Quaternion.identity);
+
+        //    // Configure blue object properties
+        //    ConfigureBlueObject(blueObject, player);
+
+        //    Debug.Log($"[FusionConnector] Blue object spawned at position: {spawnPosition}");
+        //}
+        //else
+        //{
+        //    Debug.LogError("[FusionConnector] Blue object prefab not assigned!");
+        //}
+    }
+
+    /// <summary>
+    /// Spawns red objects for remote players
+    /// </summary>
+    private void SpawnRedObjects(PlayerRef player)
+    {
+        Debug.Log($"[FusionConnector] Spawning red objects for remote player {player}");
+
+        //if (redObjectPrefab != null)
+        //{
+        //    // Find a suitable spawn position for red objects
+        //    Vector3 spawnPosition = GetSpawnPosition(false); // false for red (right side)
+
+        //    GameObject redObject = Instantiate(redObjectPrefab, spawnPosition, Quaternion.identity);
+
+        //    // Configure red object properties
+        //    ConfigureRedObject(redObject, player);
+
+        //    Debug.Log($"[FusionConnector] Red object spawned at position: {spawnPosition}");
+        //}
+        //else
+        //{
+        //    Debug.LogError("[FusionConnector] Red object prefab not assigned!");
+        //}
+    }
+
+    /// <summary>
+    /// Gets spawn position based on object type
+    /// </summary>
+    private Vector3 GetSpawnPosition(bool isBlue)
+    {
+        // Get camera bounds for spawning
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            mainCamera = FindObjectOfType<Camera>();
+        }
+
+        if (mainCamera != null)
+        {
+            Vector2 screenBounds = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, mainCamera.transform.position.z));
+
+            // Blue objects spawn on the left side, red objects on the right side
+            float xPosition = isBlue ? -screenBounds.x + 1f : screenBounds.x - 1f;
+            float yPosition = UnityEngine.Random.Range(-screenBounds.y + 1f, screenBounds.y - 1f);
+
+            return new Vector3(xPosition, yPosition, 0f);
+        }
+
+        // Fallback position
+        return isBlue ? new Vector3(-8f, 0f, 0f) : new Vector3(8f, 0f, 0f);
+    }
+
+    /// <summary>
+    /// Configures blue object with player-specific properties
+    /// </summary>
+    private void ConfigureBlueObject(GameObject blueObject, PlayerRef player)
+    {
+        // Set tag for identification
+        blueObject.tag = "BluePlayer";
+
+        // Add any blue-specific components or properties
+        if (blueObject.GetComponent<BlueEnemy>() != null)
+        {
+            // If it's a BlueEnemy, configure it for the local player
+            BlueEnemy blueEnemy = blueObject.GetComponent<BlueEnemy>();
+            // Add any specific configuration here
+        }
+
+        // You can add more configuration logic here
+        Debug.Log($"[FusionConnector] Blue object configured for player {player}");
+    }
+
+    /// <summary>
+    /// Configures red object with player-specific properties
+    /// </summary>
+    private void ConfigureRedObject(GameObject redObject, PlayerRef player)
+    {
+        // Set tag for identification
+        redObject.tag = "RedPlayer";
+
+        // Add any red-specific components or properties
+        if (redObject.GetComponent<RedEnemy>() != null)
+        {
+            // If it's a RedEnemy, configure it for the remote player
+            RedEnemy redEnemy = redObject.GetComponent<RedEnemy>();
+            // Add any specific configuration here
+        }
+
+        // You can add more configuration logic here
+        Debug.Log($"[FusionConnector] Red object configured for player {player}");
+    }
+
+    /// <summary>
+    /// Public method to manually spawn objects for a specific player
+    /// </summary>
+    public void SpawnObjectsForPlayer(PlayerRef player, bool isLocalPlayer)
+    {
+        if (isLocalPlayer)
+        {
+            SpawnBlueObjects(player);
+        }
+        else
+        {
+            SpawnRedObjects(player);
         }
     }
 }
