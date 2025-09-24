@@ -10,12 +10,15 @@ public class AudioManager : MonoBehaviour
     public AudioClip backgroundMusic;
     public AudioClip gameOverMusic;
     public AudioClip victoryMusic;
+    public AudioClip losMusic;
     
     [Header("Sound Effects")]
     public AudioClip shootSound;
     public AudioClip enemyHitSound;
     public AudioClip playerHitSound;
     public AudioClip explosionSound;
+    public AudioClip explosionSound2;
+    public AudioClip FishCaptureSound;
     public AudioClip powerUpSound;
     public AudioClip buttonClickSound;
     
@@ -91,7 +94,17 @@ public class AudioManager : MonoBehaviour
             musicSource.Play();
         }
     }
-    
+
+    public void PlayLosMusic()
+    {
+        if (losMusic != null && musicSource != null)
+        {
+            musicSource.clip = losMusic;
+            musicSource.loop = false;
+            musicSource.Play();
+        }
+    }
+
     public void PlayShootSound()
     {
         PlaySFX(shootSound);
@@ -111,7 +124,17 @@ public class AudioManager : MonoBehaviour
     {
         PlaySFX(explosionSound);
     }
-    
+
+    public void PlayExplosionSound2()
+    {
+        PlaySFX(explosionSound2);
+    }
+
+    public void PlayExplosionFishCaptureSound()
+    {
+        PlaySFX(FishCaptureSound);
+    }
+
     public void PlayPowerUpSound()
     {
         PlaySFX(powerUpSound);

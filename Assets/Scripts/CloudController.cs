@@ -4,36 +4,48 @@ public class CloudController : MonoBehaviour
 {
     [Header("Cloud Movement Settings")]
     public float moveSpeed = 1f;
+    public Vector2 moveDirection;
     public float directionChangeInterval = 5f;
-    public float horizontalBoundary = 10f;
+    private float horizontalBoundary = 15f;
     
-    [Header("Cloud Properties")]
-    public bool isMainCloud = false; // Set to true for one cloud to control all others
+    //[Header("Cloud Properties")]
+    //public bool isMainCloud = false; // Set to true for one cloud to control all others
     
     private Vector2 currentDirection = Vector2.right;
     private float lastDirectionChangeTime;
-    private static Vector2 globalDirection = Vector2.right;
-    private static float globalSpeed = 1f;
+    //private static Vector2 globalDirection = Vector2.right;
+    //private static float globalSpeed = 1f;
     private static bool directionChanged = false;
     
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
-    
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
+
         // Initialize timing
         lastDirectionChangeTime = Time.time;
-        
+
         // If this is the main cloud, initialize global settings
-        if (isMainCloud)
+        //if (isMainCloud)
+        //{
+        //    globalSpeed = moveSpeed;
+        //    globalDirection = Vector2.right;
+        //}
+
+        moveSpeed = Random.Range(0.05f, 0.3f);
+
+        if (Random.Range(0, 10) % 2 == 0)
         {
-            globalSpeed = moveSpeed;
-            globalDirection = Vector2.right;
+            moveDirection = Vector2.right;
         }
-        
+        else
+        {
+            moveDirection = Vector2.left;
+        }
+        directionChangeInterval = Random.Range(10.0f, 30.0f);
         // Set initial velocity
         UpdateMovement();
     }
@@ -41,7 +53,7 @@ public class CloudController : MonoBehaviour
     void Update()
     {
         // Only the main cloud handles direction changes
-        if (isMainCloud)
+        //if (isMainCloud)
         {
             HandleDirectionChange();
         }
@@ -59,11 +71,11 @@ public class CloudController : MonoBehaviour
         if (Time.time - lastDirectionChangeTime >= directionChangeInterval)
         {
             // Change direction
-            globalDirection = globalDirection == Vector2.right ? Vector2.left : Vector2.right;
+            moveDirection = moveDirection == Vector2.right ? Vector2.left : Vector2.right;
             directionChanged = true;
             lastDirectionChangeTime = Time.time;
             
-            Debug.Log($"Cloud direction changed to: {(globalDirection == Vector2.right ? "Right" : "Left")}");
+            Debug.Log($"Cloud direction changed to: {(moveDirection == Vector2.right ? "Right" : "Left")}");
         }
     }
     
@@ -72,11 +84,11 @@ public class CloudController : MonoBehaviour
         // Use global speed and direction for all clouds
         if (rb != null)
         {
-            rb.linearVelocity = globalDirection * globalSpeed;
+            rb.linearVelocity = moveDirection * moveSpeed;
         }
         
         // Update local direction for this cloud
-        currentDirection = globalDirection;
+        currentDirection = moveDirection;
     }
     
     void HandleBoundaryWrapping()
@@ -101,7 +113,7 @@ public class CloudController : MonoBehaviour
     // Public methods for external control
     public void SetSpeed(float speed)
     {
-        globalSpeed = speed;
+        //globalSpeed = speed;
         moveSpeed = speed;
     }
     
@@ -118,12 +130,12 @@ public class CloudController : MonoBehaviour
     // Method to force direction change (can be called from other scripts)
     public void ForceDirectionChange()
     {
-        if (isMainCloud)
-        {
-            globalDirection = globalDirection == Vector2.right ? Vector2.left : Vector2.right;
-            directionChanged = true;
-            lastDirectionChangeTime = Time.time;
-        }
+        //if (isMainCloud)
+        //{
+        //    globalDirection = globalDirection == Vector2.right ? Vector2.left : Vector2.right;
+        //    directionChanged = true;
+        //    lastDirectionChangeTime = Time.time;
+        //}
     }
     
     // Get current movement info
@@ -132,10 +144,10 @@ public class CloudController : MonoBehaviour
         return currentDirection;
     }
     
-    public float GetCurrentSpeed()
-    {
-        return globalSpeed;
-    }
+    //public float GetCurrentSpeed()
+    //{
+    //    return globalSpeed;
+    //}
     
     public bool IsDirectionChanged()
     {

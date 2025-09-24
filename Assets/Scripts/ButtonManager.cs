@@ -96,7 +96,7 @@ public class ButtonManager : MonoBehaviour
         // Spawn new red enemy
         if (enemySpawner != null)
         {
-            enemySpawner.SpawnRedEnemy();
+            StartCoroutine(enemySpawner.SpawnRedEnemy());
         }
 
         // Start cooldown
@@ -124,7 +124,7 @@ public class ButtonManager : MonoBehaviour
         // Spawn new blue enemy
         if (enemySpawner != null)
         {
-            enemySpawner.SpawnBlueEnemy();
+            StartCoroutine(enemySpawner.SpawnBlueEnemy());
         }
 
         // Start cooldown

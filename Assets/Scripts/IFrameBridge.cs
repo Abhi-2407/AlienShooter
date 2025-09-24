@@ -39,6 +39,7 @@ public class IFrameBridge : MonoBehaviour
     [DllImport("__Internal")] private static extern void SendGameReady();
     [DllImport("__Internal")] private static extern int GetDeviceType();
     [DllImport("__Internal")] private static extern string GetURLParameters();
+    [DllImport("__Internal")] private static extern void SendGameState(string state);
 #endif
 
     private void Awake()
@@ -261,6 +262,15 @@ public class IFrameBridge : MonoBehaviour
         SendMatchAbort(message, error, errorCode);
 #else
         Debug.Log($"[Editor] match_abort: {{ message: {message}, error: {error}, errorCode: {errorCode} }}");
+#endif
+    }
+
+    public void PostGameState(string state)
+    {
+        Debug.Log("[IFrameBridge] Game State: " + state);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        SendGameState(state);
 #endif
     }
 

@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         GameManager gameManager = FindObjectOfType<GameManager>();
         if (gameManager != null)
         {
-            gameManager.GameOver();
+            //gameManager.GameOver();
         }
         
         Destroy(gameObject);

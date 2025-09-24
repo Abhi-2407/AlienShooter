@@ -28,7 +28,8 @@ public class BlueEnemy : EnemyController
         
         // Set tag for collision detection
         gameObject.tag = "BlueEnemy";
-        
+        spawnPoint = EnemySpawner.Instance.spawnPoints[1];
+
         // Call base Start after setting properties
         base.Start();
     }
@@ -38,7 +39,7 @@ public class BlueEnemy : EnemyController
         // Blue enemies are more defensive
         if (!isDead && GameManager.Instance.gameState == GameState.START)
         {
-            HandleMovement();
+            HandleMovement(spawnPoint.position);
             HandleShooting();
             HandleRotation();
         }

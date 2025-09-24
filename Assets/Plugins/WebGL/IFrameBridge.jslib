@@ -51,6 +51,9 @@ var IFrameBridge = {
 	},
 	IsMobileWeb: function() {
 		try { return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent) ? 1 : 0; } catch (e) { return 0; }
+	},
+	GetDeviceType: function() {
+		try { return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent) ? 1 : 0; } catch (e) { return 0; }
 	}
 };
 

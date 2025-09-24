@@ -11,6 +11,7 @@ TagManager:
   - BlueLight
   - RedLight
   - Fish
+  - Destroyer
   layers:
   - Default
   - TransparentFX

@@ -28,7 +28,8 @@ public class RedEnemy : EnemyController
         
         // Set tag for collision detection
         gameObject.tag = "RedEnemy";
-        
+        spawnPoint = EnemySpawner.Instance.spawnPoints[0];
+
         // Call base Start after setting properties
         base.Start();
     }
@@ -38,7 +39,7 @@ public class RedEnemy : EnemyController
         // Red enemies are more aggressive
         if (!isDead && GameManager.Instance.gameState == GameState.START)
         {
-            HandleMovement();
+            HandleMovement(spawnPoint.position);
             HandleShooting();
             HandleRotation();
         }

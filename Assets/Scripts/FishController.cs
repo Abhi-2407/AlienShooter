@@ -139,7 +139,7 @@ public class FishController : MonoBehaviour
             float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
             //Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
             Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, swimSpeed * Time.deltaTime);
         }
 
         // Check if reached target
@@ -351,6 +351,8 @@ public class FishController : MonoBehaviour
                 }
             }
         }
+
+        AudioManager.Instance.PlayExplosionFishCaptureSound();
 
         Debug.Log($"Fish caught! +{catchScoreValue} points");
 

@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using static Fusion.Sockets.NetBitBuffer;
 
 public enum GameState
 {
@@ -329,28 +330,81 @@ public class GameManager : MonoBehaviour
         gameState = GameState.OVER;
         Time.timeScale = 0f;
 
-        if(player1Score > player2Score)
+        int player1Score_ = 0;
+        int player2Score_ = 0;
+
+        string message = "Game Over!";
+
+        if (!IsSinglePlayerMode && localPlayer.playerID == 1)
+        {
+            player1Score_ = player2Score;
+            player2Score_ = player1Score;
+        }
+        else
+        {
+            player1Score_ = player1Score;
+            player2Score_ = player2Score;
+        }
+
+        if (player1Score_ > player2Score_)
         {
             YouWin.SetActive(true);
             YouLoss.SetActive(false);
             Tie.SetActive(false);
+
+            message = "You Win!";
+
+            AudioManager.Instance.PlayVictoryMusic();
         }
-        else if(player1Score < player2Score)
+        else if(player1Score_ < player2Score_)
         {
             YouLoss.SetActive(true);
             YouWin.SetActive(false);
             Tie.SetActive(false);
+
+            message = "You Lose!";
+
+            AudioManager.Instance.PlayLosMusic();
         }
         else
         {
             Tie.SetActive(true);
             YouWin.SetActive(false);
             YouLoss.SetActive(false);
+
+            message = "Draw!";
+
+            AudioManager.Instance.PlayGameOverMusic();
         }
+
+        // Send game state update
+        SendGameStateUpdate(player1Score_, player2Score_);
         
+
+        IFrameBridge.Instance.PostMatchResult(message, player1Score_, player2Score_);
+
         GameoverScreen.SetActive(true);
     }
-    
+
+    // Method to send game state updates (following MotorKick pattern)
+    public void SendGameStateUpdate(int player1Score_, int player2Score_)
+    {
+        if (IFrameBridge.Instance != null)
+        {
+            // Create game state JSON
+            var gameState = new
+            {
+                player1Score = player1Score_,
+                player2Score = player2Score_,
+                gameover = true,
+                timestamp = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            };
+
+            string stateJson = JsonUtility.ToJson(gameState);
+            IFrameBridge.Instance.PostGameState(stateJson);
+        }
+    }
+
     public void TogglePause()
     {
         if (gameState == GameState.OVER) return;
@@ -419,7 +473,8 @@ public class GameManager : MonoBehaviour
     public IEnumerator IEHandleSpaceShip(GameObject go, Vector3 pos)
     {
         go.SetActive(false);
-        go.transform.position = pos;
+        Vector3 offset = new Vector3(Random.Range(-2.5f, 2.5f), 0, 0);
+        go.transform.position = pos + offset;
         yield return new WaitForSeconds(1.0f);
         go.GetComponent<SpaceshipController>().isActive = true;
         go.SetActive(true);

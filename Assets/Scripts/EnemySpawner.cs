@@ -26,7 +26,23 @@ public class EnemySpawner : MonoBehaviour
     private bool isSpawning = true;
     private Camera mainCamera;
     private Vector2 screenBounds;
-    
+
+    public static EnemySpawner Instance;
+
+    void Awake()
+    {
+        // Singleton pattern
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -187,27 +203,27 @@ public class EnemySpawner : MonoBehaviour
         enemiesSpawnedThisWave = 0;
     }
     
-    public void SpawnRedEnemy()
+    public IEnumerator SpawnRedEnemy()
     {
-        if (redEnemyPrefab == null) return;
-        
+        yield return new WaitForSeconds(0.5f);
+
         // Choose a random spawn point for red enemy
-        Transform spawnPoint = spawnPoints[0]; // Left side spawn points
+        Vector3 spawnPointPos = spawnPoints[0].position + new Vector3(Random.Range(-2.5f, 2.5f), 0, 0); // Left side spawn points
         
-        GameObject redEnemy = Instantiate(redEnemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        GameObject redEnemy = Instantiate(redEnemyPrefab, spawnPointPos, spawnPoints[1].rotation);
         ConfigureEnemyForWave(redEnemy);
         
         Debug.Log("Red enemy spawned!");
     }
     
-    public void SpawnBlueEnemy()
+    public IEnumerator SpawnBlueEnemy()
     {
-        if (blueEnemyPrefab == null) return;
+        yield return new WaitForSeconds(0.5f);
         
         // Choose a random spawn point for blue enemy
-        Transform spawnPoint = spawnPoints[1]; // Left side spawn points
+        Vector3  spawnPointPos = spawnPoints[1].position + new Vector3(Random.Range(-2.5f,2.5f),0,0); // Left side spawn points
         
-        GameObject blueEnemy = Instantiate(blueEnemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        GameObject blueEnemy = Instantiate(blueEnemyPrefab, spawnPointPos, spawnPoints[1].rotation);
         ConfigureEnemyForWave(blueEnemy);
         
         Debug.Log("Blue enemy spawned!");

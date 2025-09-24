@@ -196,7 +196,7 @@ public class SpaceshipController : MonoBehaviour
             CreateExplosionEffect();
 
             // Play collision sound
-            PlayCollisionSound();
+            AudioManager.Instance.PlayExplosionSound();
 
             // Destroy both spaceship and enemy
             DestroyEnemy(enemy);

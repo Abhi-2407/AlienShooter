@@ -12,7 +12,8 @@ public class EnemyController : MonoBehaviour
     public float horizontalRange = 3f;
     public float horizontalSpeed = 1f;
     public float verticalSpeed = 0.5f;
-    private Vector3 startPosition;
+    //private Vector3 startPosition;
+    public Transform spawnPoint;
     private bool movingRight = true;
     
     [Header("Health Settings")]
@@ -46,7 +47,7 @@ public class EnemyController : MonoBehaviour
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
-        startPosition = transform.position;
+        //startPosition = transform.position;
         
         // Find player
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -66,11 +67,11 @@ public class EnemyController : MonoBehaviour
         //}
     }
 
-    public void HandleMovement()
+    public void HandleMovement(Vector3 centerPos)
     {
         if (isHorizontalEnemy)
         {
-            HandleHorizontalMovement();
+            HandleHorizontalMovement(centerPos);
         }
         else
         {
@@ -88,12 +89,12 @@ public class EnemyController : MonoBehaviour
         }
     }
     
-    void HandleHorizontalMovement()
+    void HandleHorizontalMovement(Vector3 centerPos)
     {
         if (rb == null) return;
         
         // Calculate horizontal movement within range
-        float horizontalOffset = transform.position.x - startPosition.x;
+        float horizontalOffset = transform.position.x - centerPos.x;
         
         // Check if we need to change direction
         if (horizontalOffset >= horizontalRange && movingRight)
