@@ -244,14 +244,46 @@ public class IFrameBridge : MonoBehaviour
 
     private System.Collections.IEnumerator PostMatchResultWithDelay(string outcome, int score, int opponentScore)
     {
-        Debug.Log("[IFrameBridge] Waiting 3 seconds before sending match result...");
+        Debug.Log("[IFrameBridge] Waiting 3 seconds before sending match result..." + MatchId);
         yield return new WaitForSeconds(3f);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
+        Debug.Log($"[IFrameBridge] Sending first payload - Outcome: {outcome}");
         SendMatchResult(MatchId, PlayerId, OpponentId, outcome, score, opponentScore);
+
+        yield return new WaitForSeconds(0.5f);
+
+        string opponentOutcome = (outcome == "won") ? "lost" : (outcome == "lost") ? "won" : "tie";
+
+        Debug.Log($"[IFrameBridge] Sending second payload - Opponent Outcome: {opponentOutcome}");
+        SendMatchResult(MatchId, OpponentId, PlayerId, opponentOutcome, opponentScore, score);
+            
+        StartCoroutine(WaitForScoreSubmission());
 #else
         Debug.Log($"[Editor] match_result: {{ matchId: {MatchId}, playerId: {PlayerId}, opponentId: {OpponentId}, outcome: {outcome}, score: {score}, score2: {opponentScore} }}");
 #endif
+    }
+
+    private System.Collections.IEnumerator WaitForScoreSubmission()
+    {
+        // Wait for score submission (max 5 seconds)
+        float waitTime = 0f;
+        while (!scoreSubmitted && waitTime < 5f)
+        {
+            waitTime += Time.deltaTime;
+            scoreSubmitted = IsScoreSubmitted();
+            yield return null;
+        }
+
+        if (!scoreSubmitted)
+        {
+            Debug.LogWarning("[IFrameBridge] Score submission timed out");
+        }
+    }
+
+    public bool IsScoreSubmitted()
+    {
+        return scoreSubmitted;
     }
 
     public void PostMatchAbort(string message, string error = "", string errorCode = "")

@@ -56,8 +56,8 @@ public class FishController : MonoBehaviour
         // Set initial target position
         SetRandomTargetPosition();
 
-        // Randomize initial rotation
-        transform.rotation = Quaternion.Euler(0, 0, Random.Range(0f, 360f));
+		// Randomize initial rotation (yaw only)
+		transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
     }
 
     void Update()
@@ -72,10 +72,10 @@ public class FishController : MonoBehaviour
             {
                 MoveToTarget();
             }
-            else
-            {
-                SwimInDirection();
-            }
+		else
+		{
+			SwimInDirection();
+		}
 
             // Check if it's time to change direction
             if (Time.time >= nextDirectionChangeTime)
@@ -83,9 +83,12 @@ public class FishController : MonoBehaviour
                 ChangeDirection();
             }
 
-            // Keep fish within bounds
-            KeepWithinBounds();
+			// Keep fish within bounds
+			KeepWithinBounds();
         }
+
+		// Enforce yaw-only rotation: zero X and Z, keep Y
+		ConstrainRotationToYaw();
     }
 
     void CalculateSwimBounds()
@@ -136,10 +139,9 @@ public class FishController : MonoBehaviour
         // Rotate towards movement direction
         if (directionToTarget != Vector2.zero)
         {
-            float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
-            //Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, swimSpeed * Time.deltaTime);
+			float angle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+			Quaternion targetRotation = Quaternion.Euler(0f, angle, 0f);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, swimSpeed * Time.deltaTime);
         }
 
         // Check if reached target
@@ -159,12 +161,20 @@ public class FishController : MonoBehaviour
         // Rotate towards movement direction
         if (currentDirection != Vector2.zero)
         {
-            float angle = Mathf.Atan2(currentDirection.y, currentDirection.x) * Mathf.Rad2Deg;
-            //Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            Quaternion targetRotation = Quaternion.AngleAxis(angle, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+			float angle = Mathf.Atan2(currentDirection.y, currentDirection.x) * Mathf.Rad2Deg;
+			Quaternion targetRotation = Quaternion.Euler(0f, angle, 0f);
+			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
+
+	private void ConstrainRotationToYaw()
+	{
+		Vector3 euler = transform.eulerAngles;
+		if (euler.x != 0f || euler.z != 0f)
+		{
+			transform.rotation = Quaternion.Euler(0f, euler.y, 0f);
+		}
+	}
 
     void ChangeDirection()
     {

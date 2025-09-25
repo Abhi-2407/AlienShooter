@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2cf8fe3f47e684bb447bdd0a132d52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 300
+  timeLimit: 30
   autoStart: 0
   firstDigitText: {fileID: 0}
   secondDigitText: {fileID: 0}
@@ -802,7 +802,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d534c90dadf7a34987bfe8395ddc482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsSinglePlayer: 0
+  IsSinglePlayer: 1
   IsEasyMod: 0
   gameManager: {fileID: 1713237046}
   gameTimer: {fileID: 8338727}

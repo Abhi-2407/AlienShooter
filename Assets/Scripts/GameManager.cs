@@ -352,7 +352,7 @@ public class GameManager : MonoBehaviour
             YouLoss.SetActive(false);
             Tie.SetActive(false);
 
-            message = "You Win!";
+            message = "won";
 
             AudioManager.Instance.PlayVictoryMusic();
         }
@@ -362,7 +362,7 @@ public class GameManager : MonoBehaviour
             YouWin.SetActive(false);
             Tie.SetActive(false);
 
-            message = "You Lose!";
+            message = "lost";
 
             AudioManager.Instance.PlayLosMusic();
         }
@@ -372,7 +372,7 @@ public class GameManager : MonoBehaviour
             YouWin.SetActive(false);
             YouLoss.SetActive(false);
 
-            message = "Draw!";
+            message = "draw";
 
             AudioManager.Instance.PlayGameOverMusic();
         }
