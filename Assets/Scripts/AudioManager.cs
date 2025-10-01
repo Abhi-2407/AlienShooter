@@ -4,30 +4,22 @@ public class AudioManager : MonoBehaviour
 {
     [Header("Audio Sources")]
     public AudioSource musicSource;
+    public AudioSource CountDownSource;
     public AudioSource sfxSource;
+    public AudioSource fishCapture;
     
     [Header("Music")]
+    public AudioClip countDownMusic;
+    public AudioClip goMusic;
     public AudioClip backgroundMusic;
-    public AudioClip gameOverMusic;
     public AudioClip victoryMusic;
     public AudioClip losMusic;
     
     [Header("Sound Effects")]
-    public AudioClip shootSound;
-    public AudioClip enemyHitSound;
-    public AudioClip playerHitSound;
     public AudioClip explosionSound;
-    public AudioClip explosionSound2;
+    public AudioClip missileDropSound;
     public AudioClip FishCaptureSound;
-    public AudioClip powerUpSound;
-    public AudioClip buttonClickSound;
-    
-    [Header("Volume Settings")]
-    [Range(0f, 1f)]
-    public float musicVolume = 0.7f;
-    [Range(0f, 1f)]
-    public float sfxVolume = 0.8f;
-    
+   
     public static AudioManager Instance { get; private set; }
     
     void Awake()
@@ -45,130 +37,79 @@ public class AudioManager : MonoBehaviour
     }
     
     void Start()
-    {
-        // Setup audio sources
-        if (musicSource == null)
-        {
-            musicSource = gameObject.AddComponent<AudioSource>();
-        }
-        
-        if (sfxSource == null)
-        {
-            sfxSource = gameObject.AddComponent<AudioSource>();
-        }
-        
-        // Configure audio sources
-        musicSource.loop = true;
-        musicSource.volume = musicVolume;
-        sfxSource.volume = sfxVolume;
-        
-        // Start background music
-        PlayBackgroundMusic();
+    {      
+
     }
-    
+
+    public void CountDownMusic()
+    {
+        if (countDownMusic != null && CountDownSource != null)
+        {
+            CountDownSource.clip = countDownMusic;
+            CountDownSource.loop = false;
+            CountDownSource.Play();
+        }
+    }
+
+    public void GoMusic()
+    {
+        if (goMusic != null && CountDownSource != null)
+        {
+            CountDownSource.clip = goMusic;
+            CountDownSource.loop = false;
+            CountDownSource.Play();
+        }
+    }
+
     public void PlayBackgroundMusic()
     {
-        if (backgroundMusic != null && musicSource != null)
-        {
-            musicSource.clip = backgroundMusic;
-            musicSource.Play();
-        }
+        musicSource.clip = backgroundMusic;
+        musicSource.loop = true;
+        musicSource.Play();
     }
-    
-    public void PlayGameOverMusic()
-    {
-        if (gameOverMusic != null && musicSource != null)
-        {
-            musicSource.clip = gameOverMusic;
-            musicSource.loop = false;
-            musicSource.Play();
-        }
-    }
-    
+
     public void PlayVictoryMusic()
     {
-        if (victoryMusic != null && musicSource != null)
-        {
-            musicSource.clip = victoryMusic;
-            musicSource.loop = false;
-            musicSource.Play();
-        }
+        musicSource.clip = victoryMusic;
+        musicSource.loop = false;
+        musicSource.Play();
     }
 
     public void PlayLosMusic()
     {
-        if (losMusic != null && musicSource != null)
-        {
-            musicSource.clip = losMusic;
-            musicSource.loop = false;
-            musicSource.Play();
-        }
+        musicSource.clip = losMusic;
+        musicSource.loop = false;
+        musicSource.Play();
     }
 
-    public void PlayShootSound()
+    public void PlayDrawMusic()
     {
-        PlaySFX(shootSound);
+        musicSource.clip = losMusic;
+        musicSource.loop = false;
+        musicSource.Play();
     }
-    
-    public void PlayEnemyHitSound()
+
+    public void PlayFishCaptureSound()
     {
-        PlaySFX(enemyHitSound);
+        fishCapture.clip = FishCaptureSound;
+        fishCapture.loop = false;
+        fishCapture.PlayOneShot(FishCaptureSound);
     }
-    
-    public void PlayPlayerHitSound()
-    {
-        PlaySFX(playerHitSound);
-    }
-    
+
     public void PlayExplosionSound()
     {
-        PlaySFX(explosionSound);
+        sfxSource.clip = explosionSound;
+        sfxSource.volume = 1.0f;
+        sfxSource.loop = false;
+        sfxSource.PlayOneShot(explosionSound);
     }
 
-    public void PlayExplosionSound2()
+    public void PlayMissileDropSound()
     {
-        PlaySFX(explosionSound2);
-    }
-
-    public void PlayExplosionFishCaptureSound()
-    {
-        PlaySFX(FishCaptureSound);
-    }
-
-    public void PlayPowerUpSound()
-    {
-        PlaySFX(powerUpSound);
-    }
-    
-    public void PlayButtonClickSound()
-    {
-        PlaySFX(buttonClickSound);
-    }
-    
-    void PlaySFX(AudioClip clip)
-    {
-        if (clip != null && sfxSource != null)
-        {
-            sfxSource.PlayOneShot(clip);
-        }
-    }
-    
-    public void SetMusicVolume(float volume)
-    {
-        musicVolume = Mathf.Clamp01(volume);
-        if (musicSource != null)
-        {
-            musicSource.volume = musicVolume;
-        }
-    }
-    
-    public void SetSFXVolume(float volume)
-    {
-        sfxVolume = Mathf.Clamp01(volume);
-        if (sfxSource != null)
-        {
-            sfxSource.volume = sfxVolume;
-        }
+        sfxSource.clip = missileDropSound;
+        sfxSource.volume = 0.4f;
+        sfxSource.loop = false;
+        sfxSource.PlayOneShot(missileDropSound);
     }
     
     public void StopMusic()

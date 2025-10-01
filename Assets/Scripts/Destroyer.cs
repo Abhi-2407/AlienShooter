@@ -21,7 +21,7 @@ public class Destroyer : MonoBehaviour
         CreateExplosionEffect(enemy.transform);
 
         // Play collision sound
-        AudioManager.Instance.PlayExplosionSound2();
+        AudioManager.Instance.PlayExplosionSound();
 
         // Destroy both spaceship and enemy
         DestroyEnemy(enemy);

@@ -30,10 +30,11 @@ public class IFrameBridge : MonoBehaviour
     public static string MatchId { get; private set; } = string.Empty;
     public static string PlayerId { get; private set; } = string.Empty;
     public static string OpponentId { get; private set; } = string.Empty;
+    public static string Region { get; private set; } = string.Empty;
 
     // WebGL external methods (DllImport) matching our platform bridge
 #if UNITY_WEBGL && !UNITY_EDITOR
-    [DllImport("__Internal")] private static extern void SendMatchResult(string matchId, string playerId, string opponentId, string outcome, int score, int opponentScore);
+    [DllImport("__Internal")] private static extern void SendMatchResult(string matchId, string playerId, string opponentId, string outcome, int score, int opponentScore, string region);
     [DllImport("__Internal")] private static extern void SendMatchAbort(string message, string error, string errorCode);     
     [DllImport("__Internal")] private static extern void SendBuildVersion(string version);
     [DllImport("__Internal")] private static extern void SendGameReady();
@@ -95,16 +96,16 @@ public class IFrameBridge : MonoBehaviour
         {
             if (IsEasyMod)
             {
-                json = "{\"matchId\":\"test_match\",\"playerId\":\"human_player\",\"opponentId\":\"a912345678\"}";
+                json = "{\"matchId\":\"test_match\",\"playerId\":\"human_player\",\"opponentId\":\"a912345678\",\"region\":\"in\"}";
             }
             else
             {
-                json = "{\"matchId\":\"test_match\",\"playerId\":\"human_player\",\"opponentId\":\"b912345678\"}";
+                json = "{\"matchId\":\"test_match\",\"playerId\":\"human_player\",\"opponentId\":\"b912345678\",\"region\":\"in\"}";
             }
         }
         else
         {
-            json = "{\"matchId\":\"test_match\",\"playerId\":\"player1\",\"opponentId\":\"player2\"}";
+            json = "{\"matchId\":\"test_match\",\"playerId\":\"player1\",\"opponentId\":\"player2\",\"region\":\"in\"}";
         }
 
         Debug.Log($"[IFrameBridge] Editor/Build: Using test parameters: {json}");
@@ -151,6 +152,7 @@ public class IFrameBridge : MonoBehaviour
         MatchId = data.matchId;
         PlayerId = data.playerId;
         OpponentId = data.opponentId;
+        Region = data.region;
 
         if (IsBot(OpponentId))
         {
@@ -201,7 +203,7 @@ public class IFrameBridge : MonoBehaviour
         // Show waiting UI
         gameManager.waitingForPlayersUI.SetActive(true);
 
-        FusionConnector.instance.ConnectToServer(MatchId);
+        FusionConnector.instance.ConnectToServer(MatchId, Region);
 
         // For multiplayer mode, disable bot AI (set difficulty to 0 for human vs human)
         gameManager.SetBotDifficulty(0);
@@ -249,16 +251,18 @@ public class IFrameBridge : MonoBehaviour
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         Debug.Log($"[IFrameBridge] Sending first payload - Outcome: {outcome}");
-        SendMatchResult(MatchId, PlayerId, OpponentId, outcome, score, opponentScore);
+        SendMatchResult(MatchId, PlayerId, OpponentId, outcome, score, opponentScore, Region);
 
         yield return new WaitForSeconds(0.5f);
 
         string opponentOutcome = (outcome == "won") ? "lost" : (outcome == "lost") ? "won" : "tie";
 
         Debug.Log($"[IFrameBridge] Sending second payload - Opponent Outcome: {opponentOutcome}");
-        SendMatchResult(MatchId, OpponentId, PlayerId, opponentOutcome, opponentScore, score);
+        SendMatchResult(MatchId, OpponentId, PlayerId, opponentOutcome, opponentScore, score, Region);
             
         StartCoroutine(WaitForScoreSubmission());
+
+        PostMatchAbort("", "", "");
 #else
         Debug.Log($"[Editor] match_result: {{ matchId: {MatchId}, playerId: {PlayerId}, opponentId: {OpponentId}, outcome: {outcome}, score: {score}, score2: {opponentScore} }}");
 #endif
@@ -326,7 +330,7 @@ public class IFrameBridge : MonoBehaviour
     public void AbortInitializationError(string error)
     {
         PostMatchAbort("Failed to initialize game", error, "INIT_ERROR");
-    }   
+    }  
 
     // Handle opponent leaves (should trigger player win)
     public void PostOpponentForfeit()
@@ -340,7 +344,7 @@ public class IFrameBridge : MonoBehaviour
         // Send match result with "won" for local player (this will now send two payloads)
         int myScore = gameManager != null ? gameManager.player1Score : 0;
         int opponentScore = gameManager != null ? gameManager.player2Score : 0;
-        SendMatchResult(MatchId, PlayerId, OpponentId, "won", myScore, opponentScore);
+        SendMatchResult(MatchId, PlayerId, OpponentId, "won", myScore, opponentScore, Region);
 #endif
     }
 
@@ -350,6 +354,7 @@ public class IFrameBridge : MonoBehaviour
         public string matchId = string.Empty;
         public string playerId = string.Empty;
         public string opponentId = string.Empty;
+        public string region = string.Empty;
     }
 
     [Serializable]

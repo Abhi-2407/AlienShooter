@@ -202,14 +202,24 @@ public class EnemySpawner : MonoBehaviour
     {
         enemiesSpawnedThisWave = 0;
     }
-    
+
     public IEnumerator SpawnRedEnemy()
     {
         yield return new WaitForSeconds(0.5f);
 
         // Choose a random spawn point for red enemy
         Vector3 spawnPointPos = spawnPoints[0].position + new Vector3(Random.Range(-2.5f, 2.5f), 0, 0); // Left side spawn points
-        
+
+        SpawnRedEnemy_(spawnPointPos);
+
+        if(!GameManager.Instance.IsSinglePlayerMode)
+        {
+            GameManager.Instance.localPlayer.RPC_RedEnemyCreate(spawnPointPos);
+        }
+    }
+
+    public void SpawnRedEnemy_(Vector3 spawnPointPos)
+    {
         GameObject redEnemy = Instantiate(redEnemyPrefab, spawnPointPos, spawnPoints[1].rotation);
         ConfigureEnemyForWave(redEnemy);
         
@@ -222,10 +232,20 @@ public class EnemySpawner : MonoBehaviour
         
         // Choose a random spawn point for blue enemy
         Vector3  spawnPointPos = spawnPoints[1].position + new Vector3(Random.Range(-2.5f,2.5f),0,0); // Left side spawn points
-        
+
+        SpawnBlueEnemy_(spawnPointPos);
+
+        if (!GameManager.Instance.IsSinglePlayerMode)
+        {
+            GameManager.Instance.localPlayer.RPC_BlueEnemyCreate(spawnPointPos);
+        }
+    }
+
+    public void SpawnBlueEnemy_(Vector3 spawnPointPos)
+    {
         GameObject blueEnemy = Instantiate(blueEnemyPrefab, spawnPointPos, spawnPoints[1].rotation);
         ConfigureEnemyForWave(blueEnemy);
-        
+
         Debug.Log("Blue enemy spawned!");
     }
 }

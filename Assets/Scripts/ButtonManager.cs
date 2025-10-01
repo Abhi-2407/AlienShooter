@@ -86,18 +86,18 @@ public class ButtonManager : MonoBehaviour
             GameManager.Instance.localPlayer.RPC_OnRedButtonClicked();
 
         OnRedButtonClicked_();
-    }
-
-    public void OnRedButtonClicked_()
-    {
-        // Stop all red enemies from moving horizontally and make them come down
-        StopRedEnemiesHorizontalMovement();
 
         // Spawn new red enemy
         if (enemySpawner != null)
         {
             StartCoroutine(enemySpawner.SpawnRedEnemy());
         }
+    }
+
+    public void OnRedButtonClicked_()
+    {
+        // Stop all red enemies from moving horizontally and make them come down
+        StopRedEnemiesHorizontalMovement();
 
         // Start cooldown
         StartCoroutine(RedButtonCooldown());
@@ -114,18 +114,18 @@ public class ButtonManager : MonoBehaviour
             GameManager.Instance.localPlayer.RPC_OnBlueButtonClicked();
 
         OnBlueButtonClicked_();
+
+        // Spawn new blue enemy
+        if (enemySpawner != null)
+        {
+            StartCoroutine(enemySpawner.SpawnBlueEnemy ());
+        }
     }
 
     public void OnBlueButtonClicked_()
     {
         // Stop all blue enemies from moving horizontally and make them come down
         StopBlueEnemiesHorizontalMovement();
-
-        // Spawn new blue enemy
-        if (enemySpawner != null)
-        {
-            StartCoroutine(enemySpawner.SpawnBlueEnemy());
-        }
 
         // Start cooldown
         StartCoroutine(BlueButtonCooldown());

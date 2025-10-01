@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
+using Fusion.Photon.Realtime;
 using Fusion.Sockets;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -39,12 +40,19 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
         instance = this;
     }
 
-    internal async void ConnectToServer(string sessionName)
+    internal async void ConnectToServer(string sessionName, string region = "in")
     {
         if (networkRunner == null)
             gameObject.AddComponent<NetworkRunner>();
 
         networkRunner.ProvideInput = true;
+
+        // Configure Photon app settings with region
+        var appSettings = PhotonAppSettings.Global.AppSettings.GetCopy();
+        appSettings.UseNameServer = true;
+        appSettings.AppVersion = "1.0.0";
+        appSettings.FixedRegion = region.ToLower();
+        Debug.Log($"[FusionConnector] Connecting to region: {region}");
 
         var result = await networkRunner.StartGame(
             new StartGameArgs()
@@ -52,6 +60,7 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
                 GameMode = GameMode.Shared,
                 SessionName = sessionName,
                 PlayerCount = 2,
+                CustomPhotonAppSettings = appSettings
             }
         );
 

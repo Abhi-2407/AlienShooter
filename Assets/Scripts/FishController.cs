@@ -362,7 +362,7 @@ public class FishController : MonoBehaviour
             }
         }
 
-        AudioManager.Instance.PlayExplosionFishCaptureSound();
+        AudioManager.Instance.PlayFishCaptureSound();
 
         Debug.Log($"Fish caught! +{catchScoreValue} points");
 

@@ -85,9 +85,10 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        // Load high score from PlayerPrefs
-        //highScore = PlayerPrefs.GetInt("HighScore", 0);
-        
+
+        // Start background music
+        AudioManager.Instance.PlayBackgroundMusic();
+
         // Initialize UI
         if (uiManager == null)
         {
@@ -118,7 +119,7 @@ public class GameManager : MonoBehaviour
             TogglePause();
         }
     }
-    
+
     public void StartGame()
     {
         player1Score = 0;
@@ -130,7 +131,7 @@ public class GameManager : MonoBehaviour
         gameTime = 0f;
         wave = 1;
         enemiesKilled = 0;
-        
+
         Time.timeScale = 1f;
         UpdateUI();
 
@@ -157,7 +158,15 @@ public class GameManager : MonoBehaviour
         {
             string txt = i.ToString();
 
-            if (i == 0) txt = "GO!";
+            if (i == 0)
+            {
+                txt = "GO!";
+                AudioManager.Instance.GoMusic();
+            }
+            else
+            {
+                AudioManager.Instance.CountDownMusic();
+            }
             AssignTime(txt);
             yield return new WaitForSeconds(countdownDuration);
         }
@@ -374,13 +383,12 @@ public class GameManager : MonoBehaviour
 
             message = "draw";
 
-            AudioManager.Instance.PlayGameOverMusic();
+            AudioManager.Instance.PlayDrawMusic();    
         }
 
         // Send game state update
-        SendGameStateUpdate(player1Score_, player2Score_);
+        //SendGameStateUpdate(player1Score_, player2Score_);
         
-
         IFrameBridge.Instance.PostMatchResult(message, player1Score_, player2Score_);
 
         GameoverScreen.SetActive(true);

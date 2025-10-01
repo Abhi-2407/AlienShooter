@@ -184,6 +184,22 @@ public class NetworkPlayer : NetworkBehaviour
         Debug.Log("RPC_BlueButtonClick");
     }
 
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    public void RPC_RedEnemyCreate(Vector3 pos)
+    {
+        EnemySpawner.Instance.SpawnRedEnemy_(pos);
+
+        Debug.Log("RPC_RedEnemyCreate");
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    public void RPC_BlueEnemyCreate(Vector3 pos)
+    {
+        EnemySpawner.Instance.SpawnBlueEnemy_(pos);
+
+        Debug.Log("RPC_BlueEnemyCreate");
+    }
+
     private IEnumerator DisconnectAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);

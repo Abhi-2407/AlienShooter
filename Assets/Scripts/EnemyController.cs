@@ -155,6 +155,8 @@ public class EnemyController : MonoBehaviour
             // Stop horizontal movement and make enemy come straight down
             rb.linearVelocity = new Vector2(0f, -verticalSpeed * 10f); // Double vertical speed when coming down
             isHorizontalEnemy = false; // Disable horizontal movement
+
+            AudioManager.Instance.PlayMissileDropSound();
         }
     }
     
