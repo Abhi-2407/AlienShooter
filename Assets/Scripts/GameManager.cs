@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using static Fusion.Sockets.NetBitBuffer;
+using Fusion;
 
 public enum GameState
 {
@@ -64,8 +65,17 @@ public class GameManager : MonoBehaviour
 
     [Header("Spawn Settings")]
     public Transform[] spawnPoints;
+    public Transform[] msspawnPoints;
 
     public NetworkPlayer localPlayer;
+
+    [Header("Local Player Objects")]
+    public NetworkObject blueObjectPrefab; // Blue object for local player
+    public NetworkObject blueEnemyPrefab; // Blue object for local player
+
+    [Header("Remote Player Objects")]
+    public NetworkObject redObjectPrefab; // Red object for remote player
+    public NetworkObject redEnemyPrefab; // Red object for remote player
 
     public static GameManager Instance { get; private set; }
     
@@ -195,6 +205,19 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
+    public void PlayerSpawn(NetworkRunner runner)
+    {
+        if(runner.LocalPlayer.PlayerId == 1)
+        {
+            NetworkObject go1 = runner.Spawn(blueObjectPrefab, spawnPoints[0].position, Quaternion.identity);
+            NetworkObject ms1 = runner.Spawn(blueEnemyPrefab, msspawnPoints[0].position, Quaternion.identity);
+        }
+        else
+        {
+            NetworkObject go2 = runner.Spawn(redObjectPrefab, spawnPoints[1].position, Quaternion.identity);
+            NetworkObject ms2 = runner.Spawn(redEnemyPrefab, msspawnPoints[1].position, Quaternion.identity);
+        }
+    }
 
     void AssignTime(string txt)
     {

@@ -80,7 +80,7 @@ public class ButtonManager : MonoBehaviour
     {
         if (redButtonOnCooldown) return;
         
-        Debug.Log("Red Button Clicked!");
+        //Debug.Log("Red Button Clicked!");
 
         if (!GameManager.Instance.IsSinglePlayerMode)
             GameManager.Instance.localPlayer.RPC_OnRedButtonClicked();
@@ -108,7 +108,7 @@ public class ButtonManager : MonoBehaviour
     {
         if (blueButtonOnCooldown) return;
         
-        Debug.Log("Blue Button Clicked!");
+        //Debug.Log("Blue Button Clicked!");
 
         if (!GameManager.Instance.IsSinglePlayerMode)
             GameManager.Instance.localPlayer.RPC_OnBlueButtonClicked();
@@ -264,7 +264,7 @@ public class ButtonManager : MonoBehaviour
         int redEnemyCount = FindObjectsOfType<RedEnemy>().Length;
         if (redEnemyCount <= 0) return;
         
-        Debug.Log("Bot: Automatically clicking Red Button!");
+        //Debug.Log("Bot: Automatically clicking Red Button!");
         
         // Call the existing OnRedButtonClicked method
         OnRedButtonClicked();

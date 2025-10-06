@@ -1,5 +1,6 @@
   using UnityEngine;
 using System.Collections;
+using Fusion;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -117,17 +118,40 @@ public class EnemySpawner : MonoBehaviour
     
     void SpawnEnemyPair()
     {
-        // Spawn left side enemies
-        if (redEnemyPrefab != null && spawnPoints[0] != null)
+        if (GameManager.Instance.IsSinglePlayerMode)
         {
-            GameObject leftRed = Instantiate(redEnemyPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
-            ConfigureEnemyForWave(leftRed);
+            if (redEnemyPrefab != null && spawnPoints[0] != null)
+            {
+                GameObject leftRed = Instantiate(redEnemyPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
+                ConfigureEnemyForWave(leftRed);
+            }
+
+            if (blueEnemyPrefab != null && spawnPoints[1] != null)
+            {
+                GameObject leftBlue = Instantiate(blueEnemyPrefab, spawnPoints[1].position, spawnPoints[1].rotation);
+                ConfigureEnemyForWave(leftBlue);
+            }
         }
-        
-        if (blueEnemyPrefab != null && spawnPoints[1] != null)
+    }
+
+    public void SpawnEnemyForMultiplayer()
+    {
+
+        if (GameManager.Instance.localPlayer.localPlayerID == 0)
         {
-            GameObject leftBlue = Instantiate(blueEnemyPrefab, spawnPoints[1].position, spawnPoints[1].rotation);
-            ConfigureEnemyForWave(leftBlue);
+            if (blueEnemyPrefab != null && spawnPoints[1] != null)
+            {
+                GameObject leftBlue = Instantiate(blueEnemyPrefab, spawnPoints[1].position, spawnPoints[1].rotation);
+                ConfigureEnemyForWave(leftBlue);
+            }
+        }
+        else
+        {
+            if (redEnemyPrefab != null && spawnPoints[0] != null)
+            {
+                GameObject leftRed = Instantiate(redEnemyPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
+                ConfigureEnemyForWave(leftRed);
+            }
         }
     }
     
@@ -137,7 +161,7 @@ public class EnemySpawner : MonoBehaviour
         SpawnEnemyPair();
     }
     
-    void ConfigureEnemyForWave(GameObject enemy)
+    public void ConfigureEnemyForWave(GameObject enemy)
     {
         EnemyController enemyController = enemy.GetComponent<EnemyController>();
         if (enemyController != null)
@@ -212,18 +236,19 @@ public class EnemySpawner : MonoBehaviour
 
         SpawnRedEnemy_(spawnPointPos);
 
-        if(!GameManager.Instance.IsSinglePlayerMode)
-        {
-            GameManager.Instance.localPlayer.RPC_RedEnemyCreate(spawnPointPos);
-        }
+        //if(!GameManager.Instance.IsSinglePlayerMode)
+        //{
+        //    GameManager.Instance.localPlayer.RPC_RedEnemyCreate(spawnPointPos);
+        //}
     }
 
     public void SpawnRedEnemy_(Vector3 spawnPointPos)
     {
-        GameObject redEnemy = Instantiate(redEnemyPrefab, spawnPointPos, spawnPoints[1].rotation);
-        ConfigureEnemyForWave(redEnemy);
-        
-        Debug.Log("Red enemy spawned!");
+        NetworkRunner runner = FusionConnector.instance.NetworkRunner;
+
+        NetworkObject blueEnemy = runner.Spawn(redEnemyPrefab, spawnPointPos, Quaternion.identity);
+
+        //Debug.Log("Red enemy spawned!");
     }
     
     public IEnumerator SpawnBlueEnemy()
@@ -235,17 +260,18 @@ public class EnemySpawner : MonoBehaviour
 
         SpawnBlueEnemy_(spawnPointPos);
 
-        if (!GameManager.Instance.IsSinglePlayerMode)
-        {
-            GameManager.Instance.localPlayer.RPC_BlueEnemyCreate(spawnPointPos);
-        }
+        //if (!GameManager.Instance.IsSinglePlayerMode)
+        //{
+        //    GameManager.Instance.localPlayer.RPC_BlueEnemyCreate(spawnPointPos);
+        //}
     }
 
     public void SpawnBlueEnemy_(Vector3 spawnPointPos)
     {
-        GameObject blueEnemy = Instantiate(blueEnemyPrefab, spawnPointPos, spawnPoints[1].rotation);
-        ConfigureEnemyForWave(blueEnemy);
+        NetworkRunner runner = FusionConnector.instance.NetworkRunner;
 
-        Debug.Log("Blue enemy spawned!");
+        NetworkObject blueEnemy = runner.Spawn(blueEnemyPrefab, spawnPointPos, Quaternion.identity);
+
+        //Debug.Log("Blue enemy spawned!");
     }
 }

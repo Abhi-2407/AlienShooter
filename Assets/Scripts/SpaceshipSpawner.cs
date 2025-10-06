@@ -141,7 +141,7 @@ public class SpaceshipSpawner : MonoBehaviour
         redSpaceship.tag = "Spaceship";
 
         redSpaceshipActive = true;
-        Debug.Log("Red spaceship spawned!");
+        //Debug.Log("Red spaceship spawned!");
     }
 
     public void SpawnBlueSpaceship()
@@ -164,7 +164,7 @@ public class SpaceshipSpawner : MonoBehaviour
         blueSpaceship.tag = "Spaceship";
 
         blueSpaceshipActive = true;
-        Debug.Log("Blue spaceship spawned!");
+        //Debug.Log("Blue spaceship spawned!");
     }
 
     public void OnSpaceshipDestroyed(SpaceshipController.SpaceshipType type)
@@ -252,7 +252,7 @@ public class SpaceshipSpawner : MonoBehaviour
         if (!redSpaceshipActive && redSpaceshipPrefab != null)
         {
             SpawnRedSpaceship();
-            Debug.Log("Red spaceship respawned!");
+            //Debug.Log("Red spaceship respawned!");
         }
     }
 
@@ -265,7 +265,7 @@ public class SpaceshipSpawner : MonoBehaviour
         if (!blueSpaceshipActive && blueSpaceshipPrefab != null)
         {
             SpawnBlueSpaceship();
-            Debug.Log("Blue spaceship respawned!");
+            //Debug.Log("Blue spaceship respawned!");
         }
     }
 

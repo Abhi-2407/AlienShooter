@@ -23,14 +23,6 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField]
     private NetworkObject networkPlayerPrefab;
 
-    [Header("Local Player Objects")]
-    [SerializeField]
-    private NetworkObject blueObjectPrefab; // Blue object for local player
-
-    [Header("Remote Player Objects")]
-    [SerializeField]
-    private NetworkObject redObjectPrefab; // Red object for remote player
-
     public NetworkRunner NetworkRunner => networkRunner;
 
     public GameManager gameManager;
@@ -72,7 +64,7 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
             //Initialize multiplayer match setup
 
             // Spawn players (your original working implementation)
-            //GameManager.Instance.SpawnPlayer(networkRunner);
+            GameManager.Instance.PlayerSpawn(NetworkRunner);
 
             Debug.Log("PhotonFusion: Game started successfully.");
         }
@@ -157,27 +149,39 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"[FusionConnector] Player {player} joined the game");
 
+
+       
+
+
         // Check if we have 2 players and start the game
         if (runner.ActivePlayers.Count() == 2)
         {
             Debug.Log("[FusionConnector] 2 players joined - starting multiplayer game!");
 
+            //if (runner.IsSharedModeMasterClient)
+            //{
+            //    Debug.Log("I am the Master/Host in Shared Mode");
+            //    GameObject go1 = runner.Spawn(blueObjectPrefab).gameObject;
+            //    go1.transform.position = gameManager.spawnPoints[0].position;
 
-            if (runner.IsSharedModeMasterClient)
-            {
-                Debug.Log("I am the Master/Host in Shared Mode");
-                GameObject go1 = runner.Spawn(blueObjectPrefab).gameObject;
-                go1.transform.position = gameManager.spawnPoints[0].position;
-            }
-            else
-            {
-                if (player == runner.LocalPlayer)
-                {
-                    Debug.Log("I am just a Client");
-                    GameObject go2 = runner.Spawn(redObjectPrefab).gameObject;
-                    go2.transform.position = gameManager.spawnPoints[1].position;
-                }
-            }
+            //    //GameObject ms1 = runner.Spawn(blueEnemyPrefab).gameObject;
+            //    //ms1.transform.position = gameManager.msspawnPoints[0].position;
+            //    //EnemySpawner.Instance.ConfigureEnemyForWave(ms1);
+            //}
+            //else
+            //{
+            //    if (player == runner.LocalPlayer)
+            //    {
+            //        Debug.Log("I am just a Client");
+            //        GameObject go2 = runner.Spawn(redObjectPrefab).gameObject;
+            //        go2.transform.position = gameManager.spawnPoints[1].position;
+
+            //        GameObject ms2 = runner.Spawn(redEnemyPrefab).gameObject;
+            //        ms2.transform.position = spawnPointPos;
+            //        EnemySpawner.Instance.ConfigureEnemyForWave(ms2);
+            //    }
+            //}
+
             gameManager.InitializeMultiplayerGame();
         }
     }

@@ -443,9 +443,9 @@ GameObject:
   - component: {fileID: 6023619553028618728}
   - component: {fileID: 8548305489339586296}
   - component: {fileID: 932365413672163059}
-  - component: {fileID: -8633036987192845964}
   - component: {fileID: -1431810368034903958}
   - component: {fileID: -351685209258059052}
+  - component: {fileID: 9160485356788709217}
   m_Layer: 0
   m_Name: SpaceShip_Red
   m_TagString: Untagged
@@ -579,6 +579,7 @@ MonoBehaviour:
   explosionEffect: {fileID: 1981774452263784, guid: 4e19371f43812044389be8538ddac949, type: 3}
   collisionSound: {fileID: 0}
   spaceshipColor: {r: 1, g: 1, b: 1, a: 1}
+  isActive: 1
 --- !u!95 &8548305489339586296
 Animator:
   serializedVersion: 7
@@ -1026,29 +1027,6 @@ PolygonCollider2D:
       - {x: 0.082955934, y: -0.64003694}
       - {x: 0.11103333, y: -0.63748443}
   m_UseDelaunayMesh: 0
---- !u!114 &-8633036987192845964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7863731822152381576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5e690b5fb1084f5ab1c86457af401d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
-  SyncParent: 1
-  _interpolationTarget: {fileID: 0}
-  UsePreciseRotation: 0
-  UseRenderSleepThresholds: 1
-  RenderThresholds:
-    UseEnergy: 1
-    Position: 0.01
-    Rotation: 0.01
-    Scale: 0.01
 --- !u!114 &-1431810368034903958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,8 +1044,9 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: -8633036987192845964}
+  - {fileID: 6023619553028618728}
   - {fileID: -351685209258059052}
+  - {fileID: 9160485356788709217}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-351685209258059052
 MonoBehaviour:
@@ -1092,6 +1071,23 @@ MonoBehaviour:
   localPlayerID: 0
   isMine: 0
   im1stPlayer: 0
+--- !u!114 &9160485356788709217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863731822152381576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &8344261915650554665
 GameObject:
   m_ObjectHideFlags: 0

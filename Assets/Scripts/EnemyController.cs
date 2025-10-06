@@ -1,6 +1,7 @@
+using Fusion;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : NetworkBehaviour
 {
     [Header("Movement Settings")]
     public float moveSpeed = 2f;
@@ -158,6 +159,12 @@ public class EnemyController : MonoBehaviour
 
             AudioManager.Instance.PlayMissileDropSound();
         }
+    }
+
+    public void StopMovement()
+    {
+        rb.linearVelocity = new Vector2(0f, 0f); // Double vertical speed when coming down
+        isHorizontalEnemy = false; // Disable horizontal movement
     }
     
     public void TakeDamage(int damage)

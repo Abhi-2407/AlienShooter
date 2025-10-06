@@ -16,7 +16,7 @@ public class FishController : MonoBehaviour
     public Vector2 swimAreaSize = new Vector2(10f, 6f);
 
     [Header("Fish Behavior")]
-    public bool canSwimUpDown = true;
+    private bool canSwimUpDown = false;
     public bool canSwimLeftRight = true;
     public float verticalSwimRange = 2f;
     public float horizontalSwimRange = 4f;
@@ -53,9 +53,6 @@ public class FishController : MonoBehaviour
         // Set random swim speed
         swimSpeed = Random.Range(minSwimSpeed, maxSwimSpeed);
 
-        // Set initial target position
-        SetRandomTargetPosition();
-
 		// Randomize initial rotation (yaw only)
 		transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
     }
@@ -68,27 +65,11 @@ public class FishController : MonoBehaviour
         }
         else
         {
-            if (isMovingToTarget)
-            {
-                MoveToTarget();
-            }
-		else
-		{
-			SwimInDirection();
-		}
-
-            // Check if it's time to change direction
-            if (Time.time >= nextDirectionChangeTime)
-            {
-                ChangeDirection();
-            }
-
-			// Keep fish within bounds
-			KeepWithinBounds();
+            SwimInDirection();
         }
 
-		// Enforce yaw-only rotation: zero X and Z, keep Y
-		ConstrainRotationToYaw();
+        // Enforce yaw-only rotation: zero X and Z, keep Y
+        ConstrainRotationToYaw();
     }
 
     void CalculateSwimBounds()
@@ -145,7 +126,7 @@ public class FishController : MonoBehaviour
         }
 
         // Check if reached target
-        if (Vector2.Distance(transform.position, targetPosition) < 0.5f)
+        if (Vector2.Distance((Vector2)transform.position, targetPosition) < 0.5f)
         {
             isMovingToTarget = false;
             SetRandomDirection();
@@ -257,6 +238,40 @@ public class FishController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        // Boundary by name (trigger)
+        if (other.gameObject.name == "Right Boundary")
+        {
+            // Force move left
+            currentDirection.x = -Mathf.Abs(currentDirection.x == 0f ? 1f : currentDirection.x);
+            currentDirection.y = canSwimUpDown ? currentDirection.y : 0f;
+            currentDirection.Normalize();
+            return;
+        }
+        if (other.gameObject.name == "Left Boundary")
+        {
+            // Force move right
+            currentDirection.x = Mathf.Abs(currentDirection.x == 0f ? 1f : currentDirection.x);
+            currentDirection.y = canSwimUpDown ? currentDirection.y : 0f;
+            currentDirection.Normalize();
+            return;
+        }
+        if (other.gameObject.name == "Top Boundary")
+        {
+            // Force move downward (negative Z mapped from y)
+            currentDirection.y = -Mathf.Abs(currentDirection.y == 0f ? 1f : currentDirection.y);
+            currentDirection.x = canSwimLeftRight ? currentDirection.x : 0f;
+            currentDirection.Normalize();
+            return;
+        }
+        if (other.gameObject.name == "Bottom Boundary")
+        {
+            // Force move upward (positive Z mapped from y)
+            currentDirection.y = Mathf.Abs(currentDirection.y == 0f ? 1f : currentDirection.y);
+            currentDirection.x = canSwimLeftRight ? currentDirection.x : 0f;
+            currentDirection.Normalize();
+            return;
+        }
+
         // Check if fish enters a light collider
         if (other.CompareTag("BlueLight") || other.CompareTag("RedLight"))
         {
@@ -264,6 +279,39 @@ public class FishController : MonoBehaviour
             {
                 StartCatching(other.transform);
             }
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        var go = collision.gameObject;
+        if (go.name == "Right Boundary")
+        {
+            currentDirection.x = -Mathf.Abs(currentDirection.x == 0f ? 1f : currentDirection.x);
+            currentDirection.y = canSwimUpDown ? currentDirection.y : 0f;
+            currentDirection.Normalize();
+            return;
+        }
+        if (go.name == "Left Boundary")
+        {
+            currentDirection.x = Mathf.Abs(currentDirection.x == 0f ? 1f : currentDirection.x);
+            currentDirection.y = canSwimUpDown ? currentDirection.y : 0f;
+            currentDirection.Normalize();
+            return;
+        }
+        if (go.name == "Top Boundary")
+        {
+            currentDirection.y = -Mathf.Abs(currentDirection.y == 0f ? 1f : currentDirection.y);
+            currentDirection.x = canSwimLeftRight ? currentDirection.x : 0f;
+            currentDirection.Normalize();
+            return;
+        }
+        if (go.name == "Bottom Boundary")
+        {
+            currentDirection.y = Mathf.Abs(currentDirection.y == 0f ? 1f : currentDirection.y);
+            currentDirection.x = canSwimLeftRight ? currentDirection.x : 0f;
+            currentDirection.Normalize();
+            return;
         }
     }
 
@@ -294,7 +342,7 @@ public class FishController : MonoBehaviour
         isMovingToTarget = false;
         currentDirection = Vector2.zero;
 
-        Debug.Log($"Fish caught by {spaceship.tag}!");
+        //Debug.Log($"Fish caught by {spaceship.tag}!");
     }
 
     void StopCatching()
@@ -311,7 +359,7 @@ public class FishController : MonoBehaviour
             SetRandomDirection();
         }
 
-        Debug.Log("Fish released from light!");
+        //Debug.Log("Fish released from light!");
     }
 
     void HandleCatching()
@@ -364,7 +412,7 @@ public class FishController : MonoBehaviour
 
         AudioManager.Instance.PlayFishCaptureSound();
 
-        Debug.Log($"Fish caught! +{catchScoreValue} points");
+        //Debug.Log($"Fish caught! +{catchScoreValue} points");
 
         // Destroy the fish
         Destroy(gameObject);

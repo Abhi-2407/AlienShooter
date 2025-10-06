@@ -75,7 +75,7 @@ public class CloudController : MonoBehaviour
             directionChanged = true;
             lastDirectionChangeTime = Time.time;
             
-            Debug.Log($"Cloud direction changed to: {(moveDirection == Vector2.right ? "Right" : "Left")}");
+            //Debug.Log($"Cloud direction changed to: {(moveDirection == Vector2.right ? "Right" : "Left")}");
         }
     }
     

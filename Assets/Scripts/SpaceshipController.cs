@@ -1,8 +1,9 @@
 using Fusion;
+//using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SpaceshipController : MonoBehaviour
+public class SpaceshipController : NetworkBehaviour
 {
     [Header("Spaceship Settings")]
     public SpaceshipType spaceshipType;
@@ -68,8 +69,31 @@ public class SpaceshipController : MonoBehaviour
     {
         if (!isActive) return;
 
-        if (GameManager.Instance.gameState == GameState.START)
-            HandleMovement();
+        if (GameManager.Instance.IsSinglePlayerMode)
+        {
+            if (GameManager.Instance.gameState == GameState.START)
+            {
+                HandleMovement();
+            }
+            if (GameManager.Instance.gameState == GameState.OVER)
+            {
+                rb.linearVelocity = new Vector2(0, 0);
+            }
+        }
+        else
+        {
+            if(Object.HasStateAuthority)
+            {
+                if (GameManager.Instance.gameState == GameState.START)
+                {
+                    HandleMovement();
+                }
+                if (GameManager.Instance.gameState == GameState.OVER)
+                {
+                    rb.linearVelocity = new Vector2(0, 0);
+                }
+            }
+        }
     }
 
     void HandleMovement()
@@ -112,7 +136,7 @@ public class SpaceshipController : MonoBehaviour
                 isMoving = false;
                 currentStopTime = 0f;
                 rb.linearVelocity = Vector2.zero;
-                Debug.Log($"{spaceshipType} spaceship stopped moving after {currentMoveDuration:F1}s");
+                //Debug.Log($"{spaceshipType} spaceship stopped moving after {currentMoveDuration:F1}s");
             }
         }
         else
@@ -134,7 +158,7 @@ public class SpaceshipController : MonoBehaviour
                 if (Random.Range(0f, 1f) < directionChangeChance)
                 {
                     movingRight = !movingRight;
-                    Debug.Log($"{spaceshipType} spaceship changed direction to {(movingRight ? "right" : "left")} after {currentStopDuration:F1}s stop");
+                    //Debug.Log($"{spaceshipType} spaceship changed direction to {(movingRight ? "right" : "left")} after {currentStopDuration:F1}s stop");
                 }
             }
         }
@@ -145,7 +169,7 @@ public class SpaceshipController : MonoBehaviour
             if (Random.Range(0f, 1f) < directionChangeChance)
             {
                 movingRight = !movingRight;
-                Debug.Log($"{spaceshipType} spaceship randomly changed direction to {(movingRight ? "right" : "left")}");
+                //Debug.Log($"{spaceshipType} spaceship randomly changed direction to {(movingRight ? "right" : "left")}");
             }
             nextDirectionChangeTime = Time.time + Random.Range(currentMoveDuration * 0.5f, currentMoveDuration * 1.5f);
         }
@@ -158,7 +182,7 @@ public class SpaceshipController : MonoBehaviour
 
         currentStopDuration = Random.Range(stopDurationMin, stopDurationMax);
 
-        Debug.Log($"{spaceshipType} spaceship: Move={currentMoveDuration:F1}s, Stop={currentStopDuration:F1}s");
+        //Debug.Log($"{spaceshipType} spaceship: Move={currentMoveDuration:F1}s, Stop={currentStopDuration:F1}s");
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -202,7 +226,7 @@ public class SpaceshipController : MonoBehaviour
             DestroyEnemy(enemy);
             DestroySpaceship();
 
-            Debug.Log($"{spaceshipType} spaceship collided with {spaceshipType} enemy! +{scoreValue} points");
+            //Debug.Log($"{spaceshipType} spaceship collided with {spaceshipType} enemy! +{scoreValue} points");
         }
     }
 

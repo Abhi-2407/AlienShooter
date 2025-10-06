@@ -33,15 +33,39 @@ public class BlueEnemy : EnemyController
         // Call base Start after setting properties
         base.Start();
     }
-    
+
     void Update()
     {
-        // Blue enemies are more defensive
-        if (!isDead && GameManager.Instance.gameState == GameState.START)
+        if (GameManager.Instance.IsSinglePlayerMode)
         {
-            HandleMovement(spawnPoint.position);
-            HandleShooting();
-            HandleRotation();
+            // Blue enemies are more defensive
+            if (!isDead && GameManager.Instance.gameState == GameState.START)
+            {
+                HandleMovement(spawnPoint.position);
+                HandleShooting();
+                HandleRotation();
+            }
+            if (!isDead && GameManager.Instance.gameState == GameState.OVER)
+            {
+                StopMovement();
+            }
+        }
+        else
+        {
+            if (Object.HasStateAuthority)
+            {
+                // Blue enemies are more defensive
+                if (!isDead && GameManager.Instance.gameState == GameState.START)
+                {
+                    HandleMovement(spawnPoint.position);
+                    HandleShooting();
+                    HandleRotation();
+                }
+                if (!isDead && GameManager.Instance.gameState == GameState.OVER)
+                {
+                    StopMovement();
+                }
+            }
         }
     }
     
@@ -66,6 +90,6 @@ public class BlueEnemy : EnemyController
         base.StopHorizontalMovement();
         
         // Blue enemies might have additional behavior when stopped
-        Debug.Log("Blue enemy stopped horizontal movement!");
+        //Debug.Log("Blue enemy stopped horizontal movement!");
     }
 }

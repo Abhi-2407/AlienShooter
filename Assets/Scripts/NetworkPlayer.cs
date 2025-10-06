@@ -134,7 +134,7 @@ public class NetworkPlayer : NetworkBehaviour
         NetworkPlayer[] players = FindObjectsOfType<NetworkPlayer>();
         bool allReady = true;
 
-        Debug.Log("CheckGameStart2");
+        //Debug.Log("CheckGameStart2");
 
         foreach (var player in players)
         {
@@ -173,7 +173,7 @@ public class NetworkPlayer : NetworkBehaviour
     {
         ButtonManager.Instance.OnRedButtonClicked_();
 
-        Debug.Log("RPC_RedButtonClick");
+        //Debug.Log("RPC_RedButtonClick");
     }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
@@ -181,24 +181,24 @@ public class NetworkPlayer : NetworkBehaviour
     {
         ButtonManager.Instance.OnBlueButtonClicked_();
 
-        Debug.Log("RPC_BlueButtonClick");
+        //Debug.Log("RPC_BlueButtonClick");
     }
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
-    public void RPC_RedEnemyCreate(Vector3 pos)
-    {
-        EnemySpawner.Instance.SpawnRedEnemy_(pos);
+    //[Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    //public void RPC_RedEnemyCreate(Vector3 pos)
+    //{
+    //    EnemySpawner.Instance.SpawnRedEnemy_(pos);
 
-        Debug.Log("RPC_RedEnemyCreate");
-    }
+    //    //Debug.Log("RPC_RedEnemyCreate");
+    //}
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
-    public void RPC_BlueEnemyCreate(Vector3 pos)
-    {
-        EnemySpawner.Instance.SpawnBlueEnemy_(pos);
+    //[Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    //public void RPC_BlueEnemyCreate(Vector3 pos)
+    //{
+    //    EnemySpawner.Instance.SpawnBlueEnemy_(pos);
 
-        Debug.Log("RPC_BlueEnemyCreate");
-    }
+    //    //Debug.Log("RPC_BlueEnemyCreate");
+    //}
 
     private IEnumerator DisconnectAfterDelay(float delay)
     {

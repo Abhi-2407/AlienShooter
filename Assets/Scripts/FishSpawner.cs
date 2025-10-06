@@ -23,7 +23,7 @@ public class FishSpawner : MonoBehaviour
     public float minSwimSpeed = 1f;
     public float maxSwimSpeed = 3f;
     public float changeDirectionInterval = 2f;
-    public bool canSwimUpDown = true;
+    private bool canSwimUpDown = false;
     public bool canSwimLeftRight = true;
     
     [Header("Spawn Control")]
@@ -82,7 +82,7 @@ public class FishSpawner : MonoBehaviour
             if (autoRespawnOnDestroy && actualFishCount < previousFishCount)
             {
                 int fishDestroyed = previousFishCount - actualFishCount;
-                Debug.Log($"Fish destroyed! Count: {previousFishCount} -> {actualFishCount}. Destroyed: {fishDestroyed}");
+                //Debug.Log($"Fish destroyed! Count: {previousFishCount} -> {actualFishCount}. Destroyed: {fishDestroyed}");
 
                 // Schedule respawn if enough time has passed
                 if (Time.time - lastRespawnTime >= respawnDelayOnDestroy)
@@ -118,7 +118,7 @@ public class FishSpawner : MonoBehaviour
     {
         if (fishPrefabs == null || fishPrefabs.Length == 0)
         {
-            Debug.LogWarning("No fish prefabs assigned to FishSpawner!");
+            //Debug.LogWarning("No fish prefabs assigned to FishSpawner!");
             return;
         }
         
@@ -160,7 +160,7 @@ public class FishSpawner : MonoBehaviour
     {
         if (fishPrefabs == null || fishPrefabs.Length == 0) yield break;
         
-        Debug.Log($"Respawning {fishToRespawn} fish...");
+        //Debug.Log($"Respawning {fishToRespawn} fish...");
         
         for (int i = 0; i < fishToRespawn; i++)
         {
@@ -172,7 +172,7 @@ public class FishSpawner : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
         
-        Debug.Log($"Respawn complete. Total fish: {spawnedFish.Count}");
+        //Debug.Log($"Respawn complete. Total fish: {spawnedFish.Count}");
     }
     
     void SpawnRandomFish()
@@ -194,7 +194,7 @@ public class FishSpawner : MonoBehaviour
         // Add to spawned fish list
         spawnedFish.Add(newFish);
         
-        Debug.Log($"Spawned fish at {spawnPosition}. Total fish: {spawnedFish.Count}");
+        //Debug.Log($"Spawned fish at {spawnPosition}. Total fish: {spawnedFish.Count}");
     }
     
     Vector2 GetRandomSpawnPosition()
@@ -230,7 +230,7 @@ public class FishSpawner : MonoBehaviour
         //fishController.SetSwimSpeed(randomSpeed);
         
         // Set behavior settings
-        fishController.canSwimUpDown = canSwimUpDown;
+        //fishController.canSwimUpDown = canSwimUpDown;
         fishController.canSwimLeftRight = canSwimLeftRight;
         fishController.changeDirectionInterval = changeDirectionInterval;
         
