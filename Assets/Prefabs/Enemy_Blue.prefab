@@ -205,7 +205,7 @@ MonoBehaviour:
   moveDirection: {x: 0, y: -1}
   isHorizontalEnemy: 1
   horizontalRange: 3
-  horizontalSpeed: 10
+  horizontalSpeed: 8
   verticalSpeed: 2
   spawnPoint: {fileID: 0}
   maxHealth: 50

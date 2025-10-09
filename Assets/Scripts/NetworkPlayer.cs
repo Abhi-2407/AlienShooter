@@ -169,19 +169,25 @@ public class NetworkPlayer : NetworkBehaviour
     //[Rpc(RpcSources.All, RpcTargets.All)]
     //[Rpc(RpcSources.All, RpcTargets.AllExceptInputAuthority)]
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
-    public void RPC_OnRedButtonClicked()
+    public void RPC_OnRedButtonClicked(Vector2 pos)
     {
-        ButtonManager.Instance.OnRedButtonClicked_();
+        ButtonManager.Instance.OnRedButtonClicked_(pos);
 
         //Debug.Log("RPC_RedButtonClick");
     }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
-    public void RPC_OnBlueButtonClicked()
+    public void RPC_OnBlueButtonClicked(Vector2 pos)
     {
-        ButtonManager.Instance.OnBlueButtonClicked_();
+        ButtonManager.Instance.OnBlueButtonClicked_(pos);
 
         //Debug.Log("RPC_BlueButtonClick");
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    public void RPC_AddSpaceshipScore(SpaceshipController.SpaceshipType spaceshipType, int scoreValue)
+    {
+        GameManager.Instance.AddSpaceshipScore(spaceshipType, scoreValue);
     }
 
     //[Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]

@@ -212,8 +212,19 @@ public class SpaceshipController : NetworkBehaviour
             GameManager gameManager = FindObjectOfType<GameManager>();
             if (gameManager != null)
             {
-                gameManager.AddScore(scoreValue);
-                gameManager.AddSpaceshipScore(spaceshipType, scoreValue);
+                if (!GameManager.Instance.IsSinglePlayerMode)
+                {
+                    if (gameManager.localPlayer.playerID == 1 && enemy.CompareTag("BlueEnemy") ||
+                        gameManager.localPlayer.playerID != 1 && enemy.CompareTag("RedEnemy"))
+                    {
+                        gameManager.AddSpaceshipScore(spaceshipType, scoreValue);
+                        gameManager.localPlayer.RPC_AddSpaceshipScore(spaceshipType, scoreValue);
+                    }
+                }
+                else
+                {
+                    gameManager.AddSpaceshipScore(spaceshipType, scoreValue);
+                }
             }
 
             // Create explosion effects
@@ -237,7 +248,7 @@ public class SpaceshipController : NetworkBehaviour
         {
             enemyController.isDead = true;
         }
-        Destroy(enemy);
+        Destroy(enemy,0.1f);
     }
 
     void DestroySpaceship()

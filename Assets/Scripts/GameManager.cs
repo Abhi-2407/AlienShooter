@@ -142,7 +142,7 @@ public class GameManager : MonoBehaviour
         wave = 1;
         enemiesKilled = 0;
 
-        Time.timeScale = 1f;
+        //Time.timeScale = 1f;
         UpdateUI();
 
         fishSpawner.StartSpawning();
@@ -291,9 +291,11 @@ public class GameManager : MonoBehaviour
                 uiManager.player1ScoreTxt.text = "" + player1Score;
                 break;
         }
-        
-        // Add to main score as well
-        AddScore(points);
+    }
+
+    public void RPCScoreUpdate()
+    {
+
     }
     
     void CheckWaveProgression()
@@ -360,7 +362,6 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         gameState = GameState.OVER;
-        Time.timeScale = 0f;
 
         int player1Score_ = 0;
         int player2Score_ = 0;
@@ -441,7 +442,7 @@ public class GameManager : MonoBehaviour
         if (gameState == GameState.OVER) return;
         
         isPaused = !isPaused;
-        Time.timeScale = isPaused ? 0f : 1f;
+        //Time.timeScale = isPaused ? 0f : 1f;
         
         if (uiManager != null)
         {
@@ -451,7 +452,7 @@ public class GameManager : MonoBehaviour
     
     public void RestartGame()
     {
-        Time.timeScale = 1f;
+        //Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     

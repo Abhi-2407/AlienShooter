@@ -79,13 +79,15 @@ public class ButtonManager : MonoBehaviour
     public void OnRedButtonClicked()
     {
         if (redButtonOnCooldown) return;
-        
+
         //Debug.Log("Red Button Clicked!");
 
-        if (!GameManager.Instance.IsSinglePlayerMode)
-            GameManager.Instance.localPlayer.RPC_OnRedButtonClicked();
+        RedEnemy redEnemy = FindObjectOfType<RedEnemy>();
 
-        OnRedButtonClicked_();
+        if (!GameManager.Instance.IsSinglePlayerMode)
+            GameManager.Instance.localPlayer.RPC_OnRedButtonClicked(redEnemy.transform.position);
+
+        OnRedButtonClicked_(redEnemy.transform.position);
 
         // Spawn new red enemy
         if (enemySpawner != null)
@@ -94,10 +96,13 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
-    public void OnRedButtonClicked_()
+    public void OnRedButtonClicked_(Vector2 pos)
     {
-        // Stop all red enemies from moving horizontally and make them come down
-        StopRedEnemiesHorizontalMovement();
+        RedEnemy redEnemy = FindObjectOfType<RedEnemy>();
+
+        redEnemy.transform.position = pos;
+
+        redEnemy.StopHorizontalMovement();
 
         // Start cooldown
         StartCoroutine(RedButtonCooldown());
@@ -107,13 +112,15 @@ public class ButtonManager : MonoBehaviour
     public void OnBlueButtonClicked()
     {
         if (blueButtonOnCooldown) return;
-        
+
         //Debug.Log("Blue Button Clicked!");
 
-        if (!GameManager.Instance.IsSinglePlayerMode)
-            GameManager.Instance.localPlayer.RPC_OnBlueButtonClicked();
+        BlueEnemy blueEnemy = FindObjectOfType<BlueEnemy>();
 
-        OnBlueButtonClicked_();
+        if (!GameManager.Instance.IsSinglePlayerMode)
+            GameManager.Instance.localPlayer.RPC_OnBlueButtonClicked(blueEnemy.transform.position);
+
+        OnBlueButtonClicked_(blueEnemy.transform.position);
 
         // Spawn new blue enemy
         if (enemySpawner != null)
@@ -122,17 +129,20 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
-    public void OnBlueButtonClicked_()
+    public void OnBlueButtonClicked_(Vector2 pos)
     {
-        // Stop all blue enemies from moving horizontally and make them come down
-        StopBlueEnemiesHorizontalMovement();
+        BlueEnemy blueEnemy = FindObjectOfType<BlueEnemy>();
+
+        blueEnemy.transform.position = pos;
+
+        blueEnemy.StopHorizontalMovement();
 
         // Start cooldown
         StartCoroutine(BlueButtonCooldown());
     }
 
 
-    void StopRedEnemiesHorizontalMovement()
+    void StopRedEnemiesHorizontalMovement(Vector2 pos)
     {
         // Find all red enemies and stop their horizontal movement
         RedEnemy[] redEnemies = FindObjectsOfType<RedEnemy>();
@@ -140,7 +150,13 @@ public class ButtonManager : MonoBehaviour
         foreach (RedEnemy redEnemy in redEnemies)
         {
             if (redEnemy != null && !redEnemy.isDead)
-            {
+            {       
+                
+                if(!GameManager.Instance.IsSinglePlayerMode)
+                {
+                    redEnemy.transform.position = pos;
+                }
+
                 redEnemy.StopHorizontalMovement();
             }
         }
