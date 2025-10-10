@@ -248,7 +248,7 @@ public class SpaceshipController : NetworkBehaviour
         {
             enemyController.isDead = true;
         }
-        Destroy(enemy,0.1f);
+        Destroy(enemy,0.3f);
     }
 
     void DestroySpaceship()
@@ -269,7 +269,32 @@ public class SpaceshipController : NetworkBehaviour
         // Create explosion effect
         CreateExplosionEffect();
 
-        GameManager.Instance.HandleSpaceShip(gameObject, startPosition);
+        //gameObject.SetActive(false);
+
+        transform.GetComponent<SpriteRenderer>().enabled = false;
+        transform.GetComponent<Collider2D>().enabled = false;
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
+
+        Vector3 offset = new Vector3(Random.Range(-2.5f, 2.5f), 0, 0);
+
+        if (GameManager.Instance.IsSinglePlayerMode)
+        {            
+            GameManager.Instance.HandleSpaceShip(gameObject, startPosition, offset);
+        }
+        else
+        {
+            GameManager gameManager = FindObjectOfType<GameManager>();
+            if (gameManager.localPlayer.playerID == 1 && spaceshipType == SpaceshipType.Blue ||
+                        gameManager.localPlayer.playerID != 1 && spaceshipType == SpaceshipType.Red)
+            {
+                GameManager.Instance.localPlayer.RPC_HandleSpaceShip(spaceshipType, startPosition, offset);
+                GameManager.Instance.HandleSpaceShip(gameObject, startPosition, offset);
+            }
+        }
 
         // Destroy spaceship
         //Destroy(gameObject);

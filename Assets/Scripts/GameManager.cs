@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using static Fusion.Sockets.NetBitBuffer;
 using Fusion;
+using NUnit.Framework;
 
 public enum GameState
 {
@@ -97,7 +98,7 @@ public class GameManager : MonoBehaviour
     {
 
         // Start background music
-        AudioManager.Instance.PlayBackgroundMusic();
+        //AudioManager.Instance.PlayBackgroundMusic();
 
         // Initialize UI
         if (uiManager == null)
@@ -205,17 +206,24 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
+    public GameObject blueShip;
+    public GameObject redShip;
+
     public void PlayerSpawn(NetworkRunner runner)
     {
         if(runner.LocalPlayer.PlayerId == 1)
         {
             NetworkObject go1 = runner.Spawn(blueObjectPrefab, spawnPoints[0].position, Quaternion.identity);
             NetworkObject ms1 = runner.Spawn(blueEnemyPrefab, msspawnPoints[0].position, Quaternion.identity);
+
+            //blueShip = go1.gameObject;
         }
         else
         {
             NetworkObject go2 = runner.Spawn(redObjectPrefab, spawnPoints[1].position, Quaternion.identity);
             NetworkObject ms2 = runner.Spawn(redEnemyPrefab, msspawnPoints[1].position, Quaternion.identity);
+
+            //redShip = go2.gameObject;
         }
     }
 
@@ -497,18 +505,56 @@ public class GameManager : MonoBehaviour
         return gameTime;
     }
 
-    public void HandleSpaceShip(GameObject go, Vector3 pos)
+    public void HandleSpaceShip(GameObject go, Vector3 pos, Vector3 offset)
     {
-        StartCoroutine(IEHandleSpaceShip(go, pos));
+        StartCoroutine(IEHandleSpaceShip(go, pos, offset));
     }
 
-    public IEnumerator IEHandleSpaceShip(GameObject go, Vector3 pos)
+    public IEnumerator IEHandleSpaceShip(GameObject go, Vector3 pos, Vector3 offset)
     {
-        go.SetActive(false);
-        Vector3 offset = new Vector3(Random.Range(-2.5f, 2.5f), 0, 0);
-        go.transform.position = pos + offset;
+        //go.SetActive(false);        
         yield return new WaitForSeconds(1.0f);
         go.GetComponent<SpaceshipController>().isActive = true;
-        go.SetActive(true);
+        //go.transform.position = pos + offset;
+        //go.SetActive(true);
+        go.transform.GetComponent<SpriteRenderer>().enabled = true;
+        go.transform.GetComponent<Collider2D>().enabled = true;
+
+        for(int i = 0;i<go.transform.childCount; i++)
+        {
+            go.transform.GetChild(i).gameObject.SetActive(true);
+        }
+    }
+
+    public void Rpc_HandleSpaceShip(SpaceshipController.SpaceshipType spaceshipType, Vector3 pos, Vector3 offset)
+    {
+        StartCoroutine(Rpc_IEHandleSpaceShip(spaceshipType, pos, offset));
+    }
+
+    public IEnumerator Rpc_IEHandleSpaceShip(SpaceshipController.SpaceshipType spaceshipType, Vector3 pos, Vector3 offset)
+    {
+        GameObject go;
+
+        if(spaceshipType == SpaceshipController.SpaceshipType.Blue)
+        {
+            go = GameObject.Find("SpaceShip_Blue(Clone)");
+        }
+        else
+        {
+            go = GameObject.Find("SpaceShip_Red(Clone)");
+        }
+
+        //go.SetActive(false);                
+        yield return new WaitForSeconds(0.5f);
+        go.GetComponent<SpaceshipController>().isActive = true;
+        //go.transform.position = pos + offset;
+        //go.SetActive(true);
+        go.transform.GetComponent<SpriteRenderer>().enabled = true;
+        go.transform.GetComponent<Collider2D>().enabled = true;
+
+        for (int i = 0; i < go.transform.childCount; i++)
+        {
+            go.transform.GetChild(i).gameObject.SetActive(true);
+        }
     }
 }

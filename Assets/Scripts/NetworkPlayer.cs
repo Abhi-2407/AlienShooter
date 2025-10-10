@@ -1,6 +1,7 @@
   using UnityEngine;
 using Fusion;
 using System.Collections;
+using static Fusion.Sockets.NetBitBuffer;
 
 public class NetworkPlayer : NetworkBehaviour
 {
@@ -188,6 +189,14 @@ public class NetworkPlayer : NetworkBehaviour
     public void RPC_AddSpaceshipScore(SpaceshipController.SpaceshipType spaceshipType, int scoreValue)
     {
         GameManager.Instance.AddSpaceshipScore(spaceshipType, scoreValue);
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    public void RPC_HandleSpaceShip(SpaceshipController.SpaceshipType spaceshipType, Vector2 pos, Vector3 offset)
+    {
+        GameManager.Instance.Rpc_HandleSpaceShip(spaceshipType, pos, offset);
+
+        //Debug.Log("RPC_BlueButtonClick");
     }
 
     //[Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]

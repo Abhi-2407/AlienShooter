@@ -5602,6 +5602,8 @@ MonoBehaviour:
   blueEnemyPrefab: {fileID: -5427609656460907576, guid: 25e6345047f9f9b4ab6f5d20283c37d2, type: 3}
   redObjectPrefab: {fileID: -1431810368034903958, guid: 2852ef9811727db4b9b0dc740ba2efcf, type: 3}
   redEnemyPrefab: {fileID: -3493551175713107820, guid: e32d0e100830a394f854a82730165051, type: 3}
+  blueShip: {fileID: 0}
+  redShip: {fileID: 0}
 --- !u!4 &1713237047
 Transform:
   m_ObjectHideFlags: 0
