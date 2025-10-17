@@ -54,10 +54,10 @@ public class EnemySpawner : MonoBehaviour
         {
             CreateSpawnPoints();
         }
-        
+
         //StartCoroutine(SpawnWaves());
 
-        SpawnEnemy();
+        SpawnEnemyPair();
     }
     
     void Update()
@@ -118,7 +118,7 @@ public class EnemySpawner : MonoBehaviour
     
     void SpawnEnemyPair()
     {
-        if (GameManager.Instance.IsSinglePlayerMode)
+        //if (GameManager.Instance.IsSinglePlayerMode)
         {
             if (redEnemyPrefab != null && spawnPoints[0] != null)
             {
@@ -153,12 +153,6 @@ public class EnemySpawner : MonoBehaviour
                 ConfigureEnemyForWave(leftRed);
             }
         }
-    }
-    
-    void SpawnEnemy()
-    {
-        // This method is kept for compatibility but not used in the new system
-        SpawnEnemyPair();
     }
     
     public void ConfigureEnemyForWave(GameObject enemy)
@@ -236,63 +230,62 @@ public class EnemySpawner : MonoBehaviour
 
         SpawnRedEnemy_(spawnPointPos);
 
-        //if(!GameManager.Instance.IsSinglePlayerMode)
-        //{
-        //    GameManager.Instance.localPlayer.RPC_RedEnemyCreate(spawnPointPos);
-        //}
+        if (!GameManager.Instance.IsSinglePlayerMode)
+        {
+            GameManager.Instance.localPlayer.RPC_RedEnemyCreate(spawnPointPos);
+        }
     }
 
     public void SpawnRedEnemy_(Vector3 spawnPointPos)
     {
-        if (!GameManager.Instance.IsSinglePlayerMode)
-        {
-            NetworkRunner runner = FusionConnector.instance.NetworkRunner;
+        //if (!GameManager.Instance.IsSinglePlayerMode)
+        //{
+        //    NetworkRunner runner = FusionConnector.instance.NetworkRunner;
 
-            NetworkObject blueEnemy = runner.Spawn(redEnemyPrefab, spawnPointPos, Quaternion.identity);
-        }
-        else
-        {
+        //    NetworkObject blueEnemy = runner.Spawn(redEnemyPrefab, spawnPointPos, Quaternion.identity);
+        //}
+        //else
+        //{
             if (redEnemyPrefab != null)
             {
                 GameObject leftRed = Instantiate(redEnemyPrefab, spawnPointPos, Quaternion.identity);
                 ConfigureEnemyForWave(leftRed);
             }
-        }
+        //  }
         //Debug.Log("Red enemy spawned!");
     }
     
     public IEnumerator SpawnBlueEnemy()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.0f);
         
         // Choose a random spawn point for blue enemy
         Vector3  spawnPointPos = spawnPoints[1].position + new Vector3(Random.Range(-2.5f,2.5f),0,0); // Left side spawn points
 
         SpawnBlueEnemy_(spawnPointPos);
 
-        //if (!GameManager.Instance.IsSinglePlayerMode)
-        //{
-        //    GameManager.Instance.localPlayer.RPC_BlueEnemyCreate(spawnPointPos);
-        //}
+        if (!GameManager.Instance.IsSinglePlayerMode)
+        {
+            GameManager.Instance.localPlayer.RPC_BlueEnemyCreate(spawnPointPos);
+        }
     }
 
     public void SpawnBlueEnemy_(Vector3 spawnPointPos)
     {
-        if (!GameManager.Instance.IsSinglePlayerMode)
-        {
-            NetworkRunner runner = FusionConnector.instance.NetworkRunner;
+        //if (!GameManager.Instance.IsSinglePlayerMode)
+        //{
+        //    NetworkRunner runner = FusionConnector.instance.NetworkRunner;
 
-            NetworkObject blueEnemy = runner.Spawn(blueEnemyPrefab, spawnPointPos, Quaternion.identity);
-
-        }
-        else
-        {
+        //    NetworkObject blueEnemy = runner.Spawn(blueEnemyPrefab, spawnPointPos, Quaternion.identity);
+        //}
+        //else
+        //{
             if (blueEnemyPrefab != null)
             {
                 GameObject leftBlue = Instantiate(blueEnemyPrefab, spawnPointPos, Quaternion.identity);
                 ConfigureEnemyForWave(leftBlue);
             }
-        }
+        //}
         //Debug.Log("Blue enemy spawned!");
     }
 }

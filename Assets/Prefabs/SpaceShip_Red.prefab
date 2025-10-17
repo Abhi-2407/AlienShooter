@@ -444,7 +444,6 @@ GameObject:
   - component: {fileID: 8548305489339586296}
   - component: {fileID: 932365413672163059}
   - component: {fileID: -1431810368034903958}
-  - component: {fileID: -351685209258059052}
   - component: {fileID: 9160485356788709217}
   m_Layer: 0
   m_Name: SpaceShip_Red
@@ -1045,32 +1044,8 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 6023619553028618728}
-  - {fileID: -351685209258059052}
   - {fileID: 9160485356788709217}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &-351685209258059052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7863731822152381576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61e3c965e06016c4e931c571fc973a4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerName: Player
-  isLocalPlayer: 0
-  _playerID: 0
-  _PlayerName: 
-  _IsReady: 0
-  _IsMyTurn: 0
-  isGameStarted: 0
-  score: 0
-  localPlayerID: 0
-  isMine: 0
-  im1stPlayer: 0
 --- !u!114 &9160485356788709217
 MonoBehaviour:
   m_ObjectHideFlags: 0

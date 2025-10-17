@@ -41,9 +41,7 @@ public class BlueEnemy : EnemyController
             // Blue enemies are more defensive
             if (!isDead && GameManager.Instance.gameState == GameState.START)
             {
-                HandleMovement(spawnPoint.position);
-                HandleShooting();
-                HandleRotation();
+                HandleMovement(spawnPoint.position);  
             }
             if (!isDead && GameManager.Instance.gameState == GameState.OVER)
             {
@@ -52,34 +50,17 @@ public class BlueEnemy : EnemyController
         }
         else
         {
-            if (Object.HasStateAuthority)
+            //if (Object.HasStateAuthority)
             {
                 // Blue enemies are more defensive
                 if (!isDead && GameManager.Instance.gameState == GameState.START)
                 {
                     HandleMovement(spawnPoint.position);
-                    HandleShooting();
-                    HandleRotation();
                 }
                 if (!isDead && GameManager.Instance.gameState == GameState.OVER)
                 {
                     StopMovement();
                 }
-            }
-        }
-    }
-    
-    void HandleShooting()
-    {
-        // Blue enemies shoot less frequently but more accurately
-        if (!canShoot || enemyBulletPrefab == null || firePoint == null) return;
-        
-        if (player != null && Vector2.Distance(transform.position, player.position) <= detectionRange)
-        {
-            if (Time.time >= nextFireTime)
-            {
-                Shoot();
-                nextFireTime = Time.time + (fireRate * 1.3f); // 30% slower shooting
             }
         }
     }

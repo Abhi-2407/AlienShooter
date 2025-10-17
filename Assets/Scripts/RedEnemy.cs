@@ -43,8 +43,6 @@ public class RedEnemy : EnemyController
             if (!isDead && GameManager.Instance.gameState == GameState.START)
             {
                 HandleMovement(spawnPoint.position);
-                HandleShooting();
-                HandleRotation();
             }
             if (!isDead && GameManager.Instance.gameState == GameState.OVER)
             {
@@ -53,34 +51,17 @@ public class RedEnemy : EnemyController
         }
         else
         {
-            if (Object.HasStateAuthority)
+            //if (Object.HasStateAuthority)
             {
                 // Red enemies are more aggressive
                 if (!isDead && GameManager.Instance.gameState == GameState.START)
                 {
                     HandleMovement(spawnPoint.position);
-                    HandleShooting();
-                    HandleRotation();
                 }
                 if (!isDead && GameManager.Instance.gameState == GameState.OVER)
                 {
                     StopMovement();
                 }
-            }
-        }
-    }
-
-    void HandleShooting()
-    {
-        // Red enemies shoot more frequently
-        if (!canShoot || enemyBulletPrefab == null || firePoint == null) return;
-
-        if (player != null && Vector2.Distance(transform.position, player.position) <= detectionRange)
-        {
-            if (Time.time >= nextFireTime)
-            {
-                Shoot();
-                nextFireTime = Time.time + (fireRate * 0.7f); // 30% faster shooting
             }
         }
     }
@@ -91,6 +72,6 @@ public class RedEnemy : EnemyController
         base.StopHorizontalMovement();
 
         // Red enemies might have additional behavior when stopped
-        //Debug.Log("Red enemy stopped horizontal movement!");
+        Debug.Log("Red enemy stopped horizontal movement!");
     }
 }

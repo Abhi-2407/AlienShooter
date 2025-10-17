@@ -1,6 +1,4 @@
 using Fusion;
-//using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpaceshipController : NetworkBehaviour
@@ -33,8 +31,7 @@ public class SpaceshipController : NetworkBehaviour
     public GameObject explosionEffect;
     public AudioClip collisionSound;
 
-    [Header("Visual")]
-    public Color spaceshipColor = Color.white;
+    NetworkRunner runner;
 
     public enum SpaceshipType
     {
@@ -47,22 +44,15 @@ public class SpaceshipController : NetworkBehaviour
 
     void Start()
     {
+        runner = GetComponent<NetworkObject>().Runner;
         rb = GetComponent<Rigidbody2D>();
         startPosition = transform.position;
-
-        // Set spaceship color based on type
-        SetSpaceshipColor();
 
         // Initialize random durations
         SetRandomDurations();
 
         // Initialize movement timing
         nextDirectionChangeTime = Time.time + Random.Range(currentMoveDuration * 0.5f, currentMoveDuration * 1.5f);
-    }
-
-    void OnEnable()
-    {
-        
     }
 
     void Update()
@@ -100,15 +90,19 @@ public class SpaceshipController : NetworkBehaviour
     {
         if (rb == null) return;
 
-        // Check if spaceship is off screen
-        if (transform.position.y < -10f)
+        float centerpoint = 4.5f;
+
+        if(spaceshipType == SpaceshipType.Blue)
         {
-            DestroySpaceship();
-            return;
+            centerpoint = -4.5f;
+        }
+        else
+        {
+            centerpoint = 4.5f;
         }
 
         // Calculate horizontal offset from start position
-        float horizontalOffset = transform.position.x - startPosition.x;
+        float horizontalOffset = transform.position.x - centerpoint;
 
         // Check if we've reached the horizontal range limits
         if (horizontalOffset >= horizontalRange && movingRight)
@@ -202,43 +196,41 @@ public class SpaceshipController : NetworkBehaviour
 
     void HandleEnemyCollision(GameObject enemy)
     {
-        if (!isActive) return;
+        //if (!isActive) return;
 
         // Get enemy controller
-        EnemyController enemyController = enemy.GetComponent<EnemyController>();
-        if (enemyController != null && !enemyController.isDead)
+
+        // Add score
+        GameManager gameManager = FindObjectOfType<GameManager>();
+        if (gameManager != null)
         {
-            // Add score
-            GameManager gameManager = FindObjectOfType<GameManager>();
-            if (gameManager != null)
+            if (!GameManager.Instance.IsSinglePlayerMode)
             {
-                if (!GameManager.Instance.IsSinglePlayerMode)
-                {
-                    if (gameManager.localPlayer.playerID == 1 && enemy.CompareTag("BlueEnemy") ||
-                        gameManager.localPlayer.playerID != 1 && enemy.CompareTag("RedEnemy"))
-                    {
-                        gameManager.AddSpaceshipScore(spaceshipType, scoreValue);
-                        gameManager.localPlayer.RPC_AddSpaceshipScore(spaceshipType, scoreValue);
-                    }
-                }
-                else
+                if (gameManager.localPlayer.playerID == 1 && enemy.CompareTag("BlueEnemy") ||
+                    gameManager.localPlayer.playerID != 1 && enemy.CompareTag("RedEnemy"))
                 {
                     gameManager.AddSpaceshipScore(spaceshipType, scoreValue);
+                    gameManager.localPlayer.RPC_AddSpaceshipScore(spaceshipType, scoreValue);
                 }
             }
-
-            // Create explosion effects
-            CreateExplosionEffect();
-
-            // Play collision sound
-            AudioManager.Instance.PlayExplosionSound();
-
-            // Destroy both spaceship and enemy
-            DestroyEnemy(enemy);
-            DestroySpaceship();
-
-            //Debug.Log($"{spaceshipType} spaceship collided with {spaceshipType} enemy! +{scoreValue} points");
+            else
+            {
+                gameManager.AddSpaceshipScore(spaceshipType, scoreValue);
+            }
         }
+
+        // Create explosion effects
+        CreateExplosionEffect();
+
+        // Play collision sound
+        AudioManager.Instance.PlayExplosionSound();
+
+        // Destroy both spaceship and enemy
+        Destroy(enemy);
+        DestroySpaceship();
+
+        //Debug.Log($"{spaceshipType} spaceship collided with {spaceshipType} enemy! +{scoreValue} points");
+        //}
     }
 
     void DestroyEnemy(GameObject enemy)
@@ -248,16 +240,33 @@ public class SpaceshipController : NetworkBehaviour
         {
             enemyController.isDead = true;
         }
-        Destroy(enemy,0.3f);
+        Destroy(enemy);
     }
 
     void DestroySpaceship()
     {
-        if (!isActive) return;
+        //if (!isActive) return;
 
-        isActive = false;
+        //isActive = false;
 
-        rb.linearVelocity = Vector2.zero;
+        //for (int i = 0; i < transform.childCount; i++)
+        //{
+        //    transform.GetChild(i).gameObject.SetActive(false);
+        //}
+
+        //rb.linearVelocity = Vector2.zero;
+
+        GameManager.Instance.HandleSpaceShip(spaceshipType, startPosition);
+
+        if (!GameManager.Instance.IsSinglePlayerMode)
+        {
+            runner.Despawn(gameObject.GetComponent<NetworkObject>());
+            //Destroy(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
 
         // Notify spaceship spawner
         //SpaceshipSpawner spawner = FindObjectOfType<SpaceshipSpawner>();
@@ -267,37 +276,33 @@ public class SpaceshipController : NetworkBehaviour
         //}
 
         // Create explosion effect
-        CreateExplosionEffect();
 
         //gameObject.SetActive(false);
 
-        transform.GetComponent<SpriteRenderer>().enabled = false;
-        transform.GetComponent<Collider2D>().enabled = false;
+        //transform.GetComponent<SpriteRenderer>().enabled = false;
+        //transform.GetComponent<Collider2D>().enabled = false;
 
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            transform.GetChild(i).gameObject.SetActive(false);
-        }
+        //for (int i = 0; i < transform.childCount; i++)
+        //{
+        //    transform.GetChild(i).gameObject.SetActive(false);
+        //}
 
-        Vector3 offset = new Vector3(Random.Range(-2.5f, 2.5f), 0, 0);
+        //Vector3 offset = new Vector3(Random.Range(-2.5f, 2.5f), 0, 0);
 
-        if (GameManager.Instance.IsSinglePlayerMode)
-        {            
-            GameManager.Instance.HandleSpaceShip(gameObject, startPosition, offset);
-        }
-        else
-        {
-            GameManager gameManager = FindObjectOfType<GameManager>();
-            if (gameManager.localPlayer.playerID == 1 && spaceshipType == SpaceshipType.Blue ||
-                        gameManager.localPlayer.playerID != 1 && spaceshipType == SpaceshipType.Red)
-            {
-                GameManager.Instance.localPlayer.RPC_HandleSpaceShip(spaceshipType, startPosition, offset);
-                GameManager.Instance.HandleSpaceShip(gameObject, startPosition, offset);
-            }
-        }
-
-        // Destroy spaceship
-        //Destroy(gameObject);
+        //GameManager.Instance.HandleSpaceShip(spaceshipType, startPosition, offset);
+        //if (GameManager.Instance.IsSinglePlayerMode)
+        //{            
+        //}
+        //else
+        //{
+        //    GameManager gameManager = FindObjectOfType<GameManager>();
+        //    if (gameManager.localPlayer.playerID == 1 && spaceshipType == SpaceshipType.Blue ||
+        //                gameManager.localPlayer.playerID != 1 && spaceshipType == SpaceshipType.Red)
+        //    {
+        //        GameManager.Instance.HandleSpaceShip(gameObject, startPosition, offset);
+        //        GameManager.Instance.localPlayer.RPC_HandleSpaceShip(spaceshipType, startPosition, offset);
+        //    }
+        //}
     }
 
     void CreateExplosionEffect()
@@ -316,19 +321,9 @@ public class SpaceshipController : NetworkBehaviour
         }
     }
 
-    void SetSpaceshipColor()
-    {
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = spaceshipColor;
-        }
-    }
-
     public void SetSpaceshipType(SpaceshipType type)
     {
         spaceshipType = type;
-        SetSpaceshipColor();
     }
 
     public void SetMoveSpeed(float speed)

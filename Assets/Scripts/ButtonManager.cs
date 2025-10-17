@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,19 +48,19 @@ public class ButtonManager : MonoBehaviour
         {
             enemySpawner = FindObjectOfType<EnemySpawner>();
         }
-        
+
         // Setup button listeners
         if (redButton != null)
         {
             if (!GameManager.Instance.IsSinglePlayerMode)
                 redButton.onClick.AddListener(OnRedButtonClicked);
         }
-        
+
         if (blueButton != null)
         {
             blueButton.onClick.AddListener(OnBlueButtonClicked);
         }
-        
+
         // Initialize button colors
         UpdateButtonColors();
     }
@@ -80,14 +81,14 @@ public class ButtonManager : MonoBehaviour
     {
         if (redButtonOnCooldown) return;
 
-        //Debug.Log("Red Button Clicked!");
+        Debug.Log("Red Button Clicked!");
 
         RedEnemy redEnemy = FindObjectOfType<RedEnemy>();
 
+        OnRedButtonClicked_(redEnemy.transform.position);
+
         if (!GameManager.Instance.IsSinglePlayerMode)
             GameManager.Instance.localPlayer.RPC_OnRedButtonClicked(redEnemy.transform.position);
-
-        OnRedButtonClicked_(redEnemy.transform.position);
 
         // Spawn new red enemy
         if (enemySpawner != null)
@@ -108,24 +109,23 @@ public class ButtonManager : MonoBehaviour
         StartCoroutine(RedButtonCooldown());
     }
 
-
     public void OnBlueButtonClicked()
     {
         if (blueButtonOnCooldown) return;
 
-        //Debug.Log("Blue Button Clicked!");
+        Debug.Log("Blue Button Clicked!");
 
         BlueEnemy blueEnemy = FindObjectOfType<BlueEnemy>();
+
+        OnBlueButtonClicked_(blueEnemy.transform.position);
 
         if (!GameManager.Instance.IsSinglePlayerMode)
             GameManager.Instance.localPlayer.RPC_OnBlueButtonClicked(blueEnemy.transform.position);
 
-        OnBlueButtonClicked_(blueEnemy.transform.position);
-
         // Spawn new blue enemy
         if (enemySpawner != null)
         {
-            StartCoroutine(enemySpawner.SpawnBlueEnemy ());
+            StartCoroutine(enemySpawner.SpawnBlueEnemy());
         }
     }
 
@@ -140,7 +140,6 @@ public class ButtonManager : MonoBehaviour
         // Start cooldown
         StartCoroutine(BlueButtonCooldown());
     }
-
 
     void StopRedEnemiesHorizontalMovement(Vector2 pos)
     {

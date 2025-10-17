@@ -22,7 +22,7 @@ public class FishController : MonoBehaviour
     public float horizontalSwimRange = 4f;
 
     [Header("Light Catching System")]
-    public float catchSpeed = 3f;
+    private float catchSpeed = 5f;
     public float catchDistance = 0.5f;
     public int catchScoreValue = 5;
 
@@ -242,6 +242,7 @@ public class FishController : MonoBehaviour
         if (other.gameObject.name == "Right Boundary")
         {
             // Force move left
+            transform.position = new Vector2(transform.position.x, Random.Range(-2.0f, -4.0f));
             currentDirection.x = -Mathf.Abs(currentDirection.x == 0f ? 1f : currentDirection.x);
             currentDirection.y = canSwimUpDown ? currentDirection.y : 0f;
             currentDirection.Normalize();
@@ -250,6 +251,7 @@ public class FishController : MonoBehaviour
         if (other.gameObject.name == "Left Boundary")
         {
             // Force move right
+            transform.position = new Vector2(transform.position.x, Random.Range(-2.0f, -4.0f));
             currentDirection.x = Mathf.Abs(currentDirection.x == 0f ? 1f : currentDirection.x);
             currentDirection.y = canSwimUpDown ? currentDirection.y : 0f;
             currentDirection.Normalize();
@@ -322,7 +324,9 @@ public class FishController : MonoBehaviour
         {
             if (catchingSpaceship == other.transform)
             {
-                StopCatching();
+                //StopCatching();
+
+                OnFishCaught();
             }
         }
     }
@@ -366,7 +370,8 @@ public class FishController : MonoBehaviour
     {
         if (catchingSpaceship == null)
         {
-            StopCatching();
+            //StopCatching();
+            OnFishCaught();
             return;
         }
 
@@ -393,22 +398,22 @@ public class FishController : MonoBehaviour
 
     void OnFishCaught()
     {
-        // Add score based on spaceship type
-        GameManager gameManager = FindObjectOfType<GameManager>();
-        if (gameManager != null)
-        {
-            gameManager.AddScore(catchScoreValue);
+        //// Add score based on spaceship type
+        //GameManager gameManager = FindObjectOfType<GameManager>();
+        //if (gameManager != null)
+        //{
+        //    gameManager.AddScore(catchScoreValue);
 
-            // Add specific spaceship score if we can determine the type
-            if (catchingSpaceship != null)
-            {
-                SpaceshipController spaceshipController = catchingSpaceship.GetComponent<SpaceshipController>();
-                if (spaceshipController != null)
-                {
-                    gameManager.AddSpaceshipScore(spaceshipController.spaceshipType, catchScoreValue);
-                }
-            }
-        }
+        //    // Add specific spaceship score if we can determine the type
+        //    if (catchingSpaceship != null)
+        //    {
+        //        SpaceshipController spaceshipController = catchingSpaceship.GetComponent<SpaceshipController>();
+        //        if (spaceshipController != null)
+        //        {
+        //            gameManager.AddSpaceshipScore(spaceshipController.spaceshipType, catchScoreValue);
+        //        }
+        //    }
+        //}
 
         AudioManager.Instance.PlayFishCaptureSound();
 

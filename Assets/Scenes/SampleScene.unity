@@ -1423,7 +1423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkRunner: {fileID: 419788742}
-  networkPlayerPrefab: {fileID: 0}
+  networkPlayerPrefab: {fileID: 5797679808029090498, guid: 641f6ef1e36c8c94ababef26c82b7916, type: 3}
   gameManager: {fileID: 1713237046}
 --- !u!4 &419788741
 Transform:
@@ -2600,7 +2600,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 923118302}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 671008438}
+        m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
+        m_MethodName: OnRedButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &923118302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3518,7 +3530,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1056166724}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 671008438}
+        m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
+        m_MethodName: OnBlueButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1056166724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3823,7 +3847,7 @@ MonoBehaviour:
   - {fileID: 7522799773314307223, guid: 802c6f545050d8444b90a11bf90b6e02, type: 3}
   - {fileID: 7522799773314307223, guid: 802c6f545050d8444b90a11bf90b6e02, type: 3}
   - {fileID: 7522799773314307223, guid: 802c6f545050d8444b90a11bf90b6e02, type: 3}
-  fishCount: 20
+  fishCount: 25
   spawnDelay: 0.3
   spawnAreaCenter: {x: 0, y: -3}
   spawnAreaSize: {x: 20, y: 2.5}
@@ -3838,10 +3862,10 @@ MonoBehaviour:
   spawnOnStart: 1
   continuousSpawning: 0
   respawnDelay: 1
-  maxFishCount: 20
+  maxFishCount: 25
   autoRespawnOnDestroy: 1
-  respawnDelayOnDestroy: 2
-  targetFishCount: 15
+  respawnDelayOnDestroy: 1
+  targetFishCount: 25
 --- !u!4 &1181155778
 Transform:
   m_ObjectHideFlags: 0
@@ -5591,6 +5615,7 @@ MonoBehaviour:
   uiManager: {fileID: 632791687}
   enemySpawner: {fileID: 1066743705}
   fishSpawner: {fileID: 1181155777}
+  spaceshipSpawner: {fileID: 730387694}
   spawnPoints:
   - {fileID: 2021729369}
   - {fileID: 1950138658}
@@ -5599,9 +5624,9 @@ MonoBehaviour:
   - {fileID: 1683030347}
   localPlayer: {fileID: 0}
   blueObjectPrefab: {fileID: 1925971192673108519, guid: 6f3e4a1cab3020047868d18d962c9e62, type: 3}
-  blueEnemyPrefab: {fileID: -5427609656460907576, guid: 25e6345047f9f9b4ab6f5d20283c37d2, type: 3}
+  blueEnemyPrefab: {fileID: 0}
   redObjectPrefab: {fileID: -1431810368034903958, guid: 2852ef9811727db4b9b0dc740ba2efcf, type: 3}
-  redEnemyPrefab: {fileID: -3493551175713107820, guid: e32d0e100830a394f854a82730165051, type: 3}
+  redEnemyPrefab: {fileID: 0}
   blueShip: {fileID: 0}
   redShip: {fileID: 0}
 --- !u!4 &1713237047

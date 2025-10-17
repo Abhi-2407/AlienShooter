@@ -255,14 +255,12 @@ public class IFrameBridge : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        string opponentOutcome = (outcome == "won") ? "lost" : (outcome == "lost") ? "won" : "tie";
+        //string opponentOutcome = (outcome == "won") ? "lost" : (outcome == "lost") ? "won" : "tie";
 
-        Debug.Log($"[IFrameBridge] Sending second payload - Opponent Outcome: {opponentOutcome}");
-        SendMatchResult(MatchId, OpponentId, PlayerId, opponentOutcome, opponentScore, score, Region);
+        //Debug.Log($"[IFrameBridge] Sending second payload - Opponent Outcome: {opponentOutcome}");
+        //SendMatchResult(MatchId, OpponentId, PlayerId, opponentOutcome, opponentScore, score, Region);
             
         StartCoroutine(WaitForScoreSubmission());
-
-        PostMatchAbort("", "", "");
 #else
         Debug.Log($"[Editor] match_result: {{ matchId: {MatchId}, playerId: {PlayerId}, opponentId: {OpponentId}, outcome: {outcome}, score: {score}, score2: {opponentScore} }}");
 #endif
@@ -333,7 +331,7 @@ public class IFrameBridge : MonoBehaviour
     }  
 
     // Handle opponent leaves (should trigger player win)
-    public void PostOpponentForfeit()
+    public void  PostOpponentForfeit()
     {
         Debug.Log($"[IFrameBridge] Opponent {OpponentId} forfeited the match");
 

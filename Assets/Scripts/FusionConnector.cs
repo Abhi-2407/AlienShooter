@@ -148,15 +148,13 @@ public class FusionConnector : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log($"[FusionConnector] Player {player} joined the game");
-
-
-       
-
-
+  
         // Check if we have 2 players and start the game
         if (runner.ActivePlayers.Count() == 2)
         {
             Debug.Log("[FusionConnector] 2 players joined - starting multiplayer game!");
+
+            runner.Spawn(networkPlayerPrefab);
 
             //if (runner.IsSharedModeMasterClient)
             //{
