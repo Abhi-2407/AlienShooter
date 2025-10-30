@@ -445,6 +445,7 @@ GameObject:
   - component: {fileID: 932365413672163059}
   - component: {fileID: -1431810368034903958}
   - component: {fileID: 9160485356788709217}
+  - component: {fileID: 1395311170583510891}
   m_Layer: 0
   m_Name: SpaceShip_Red
   m_TagString: Untagged
@@ -577,7 +578,6 @@ MonoBehaviour:
   directionChangeChance: 0.3
   explosionEffect: {fileID: 1981774452263784, guid: 4e19371f43812044389be8538ddac949, type: 3}
   collisionSound: {fileID: 0}
-  spaceshipColor: {r: 1, g: 1, b: 1, a: 1}
   isActive: 1
 --- !u!95 &8548305489339586296
 Animator:
@@ -1045,6 +1045,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 6023619553028618728}
   - {fileID: 9160485356788709217}
+  - {fileID: 1395311170583510891}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &9160485356788709217
 MonoBehaviour:
@@ -1063,6 +1064,22 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &1395311170583510891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7863731822152381576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0c91ecc45f3b7745938e52d332b3d1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rigidbody3D: {fileID: 0}
+  _rigidbody2D: {fileID: 3006292641462512445}
+  _positionLerpSpeed: 12
+  _rotationLerpSpeed: 12
 --- !u!1 &8344261915650554665
 GameObject:
   m_ObjectHideFlags: 0

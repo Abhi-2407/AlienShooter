@@ -3,6 +3,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     [Header("Audio Sources")]
+    public AudioSource bgmusicSource;
     public AudioSource musicSource;
     public AudioSource CountDownSource;
     public AudioSource sfxSource;
@@ -11,7 +12,7 @@ public class AudioManager : MonoBehaviour
     [Header("Music")]
     public AudioClip countDownMusic;
     public AudioClip goMusic;
-    public AudioClip backgroundMusic;
+    //public AudioClip backgroundMusic;
     public AudioClip victoryMusic;
     public AudioClip losMusic;
     
@@ -63,13 +64,14 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBackgroundMusic()
     {
-        musicSource.clip = backgroundMusic;
-        musicSource.loop = true;
-        musicSource.Play();
+        //bgmusicSource.clip = backgroundMusic;
+        //bgmusicSource.loop = true;
+        bgmusicSource.Play();
     }
 
     public void PlayVictoryMusic()
     {
+        bgmusicSource.Stop();
         musicSource.clip = victoryMusic;
         musicSource.loop = false;
         musicSource.Play();
@@ -77,6 +79,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayLosMusic()
     {
+        bgmusicSource.Stop();
         musicSource.clip = losMusic;
         musicSource.loop = false;
         musicSource.Play();
@@ -84,6 +87,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayDrawMusic()
     {
+        bgmusicSource.Stop();
         musicSource.clip = losMusic;
         musicSource.loop = false;
         musicSource.Play();

@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
     {
 
         // Start background music
-        AudioManager.Instance.PlayBackgroundMusic();
+        //AudioManager.Instance.PlayBackgroundMusic();
 
         // Initialize UI
         if (uiManager == null)
