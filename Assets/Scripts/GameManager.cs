@@ -3,10 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-using static Fusion.Sockets.NetBitBuffer;
 using Fusion;
-using NUnit.Framework;
-using DG.Tweening.Core.Easing;
 
 public enum GameState
 {
@@ -17,13 +14,7 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
-    //[Header("Game Settings")]
-    //public int score = 0;
-    //public int highScore = 0;
-    //public int lives = 3;
-
     [Header("Bot Settings")]
-    public int botDifficulty = 0;
     public bool IsSinglePlayerMode;
     public GameObject waitingForPlayersUI;
 
@@ -57,8 +48,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Game State")]
     public float gameTime = 0f;
-    public int wave = 1;
-    public int enemiesKilled = 0;
     
     [Header("References")]
     public UIManager uiManager;
@@ -73,12 +62,14 @@ public class GameManager : MonoBehaviour
     public NetworkPlayer localPlayer;
 
     [Header("Local Player Objects")]
-    public NetworkObject blueObjectPrefab; // Blue object for local player
-    public NetworkObject blueEnemyPrefab; // Blue object for local player
+    public NetworkObject blueObjectPrefab;
+    public NetworkObject blueEnemyPrefab;
 
     [Header("Remote Player Objects")]
-    public NetworkObject redObjectPrefab; // Red object for remote player
-    public NetworkObject redEnemyPrefab; // Red object for remote player
+    public NetworkObject redObjectPrefab;
+    public NetworkObject redEnemyPrefab;
+
+    NetworkRunner runner;
 
     public static GameManager Instance { get; private set; }
     
@@ -98,9 +89,7 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-
-        // Start background music
-        //AudioManager.Instance.PlayBackgroundMusic();
+        runner = FusionConnector.instance.NetworkRunner;
 
         // Initialize UI
         if (uiManager == null)
@@ -113,9 +102,6 @@ public class GameManager : MonoBehaviour
         {
             enemySpawner = FindObjectOfType<EnemySpawner>();
         }
-        
-        // Start the game
-        //StartGame();
     }
     
     void Update()
@@ -123,13 +109,6 @@ public class GameManager : MonoBehaviour
         if (gameState == GameState.START)
         {
             gameTime += Time.deltaTime;
-            UpdateUI();
-        }
-        
-        // Handle pause input
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePause();
         }
     }
 
@@ -139,18 +118,15 @@ public class GameManager : MonoBehaviour
         player2Score = 0;
         gameState = GameState.START;
 
-        //score = 0;
-        //lives = 3;
         gameTime = 0f;
-        wave = 1;
-        enemiesKilled = 0;
-
-        //Time.timeScale = 1f;
-        UpdateUI();
 
         fishSpawner.StartSpawning();
-    }
 
+        if (IsSinglePlayerMode)
+        {
+            SpawnEnemyForSinglePlayer();
+        }
+    }
 
     public void StartCountdown()
     {
@@ -204,45 +180,83 @@ public class GameManager : MonoBehaviour
 
     public void InitializeGame()
     {
-        // Start the game
         StartGame();
     }
 
-    public GameObject blueShip;
-    public GameObject redShip;
-
     public void PlayerSpawn(NetworkRunner runner)
     {
-        SpawnShips(runner);
-        SpawnMissile(runner);
+        SpawnShipsForMultiPlayer(runner);
+        SpawnMissileForMultiPlayer(runner);
     }
 
-    public void SpawnShips(NetworkRunner runner)
+    public void SpawnShipsForMultiPlayer(NetworkRunner runner)
     {
         if (runner.LocalPlayer.PlayerId == 1)
         {
-            NetworkObject go1 = runner.Spawn(blueObjectPrefab, spawnPoints[0].position, Quaternion.identity);
+            SpawnBlueShip(runner);
         }
         else
         {
-            NetworkObject go2 = runner.Spawn(redObjectPrefab, spawnPoints[1].position, Quaternion.identity);
+            SpawnRedShip(runner);
         }
     }
 
-    public void SpawnMissile(NetworkRunner runner)
+    public void SpawnBlueShip(NetworkRunner runner)
+    {
+        runner.Spawn(blueObjectPrefab, spawnPoints[0].position, Quaternion.identity);
+    }
+
+    public void SpawnRedShip(NetworkRunner runner)
+    {
+        runner.Spawn(redObjectPrefab, spawnPoints[1].position, Quaternion.identity);
+    }
+
+    public void SpawnBlueShip()
+    {
+        Instantiate(blueObjectPrefab, spawnPoints[0].position, Quaternion.identity);
+    }
+
+    public void SpawnRedShip()
+    {
+        Instantiate(redObjectPrefab, spawnPoints[1].position, Quaternion.identity);
+    }
+
+    public void SpawnMissileForMultiPlayer(NetworkRunner runner)
     {
         if (runner.LocalPlayer.PlayerId == 1)
         {
-            //NetworkObject ms1 = runner.Spawn(blueEnemyPrefab, msspawnPoints[0].position, Quaternion.identity);
-
-            //EnemySpawner.Instance.SpawnBlueEnemy_(msspawnPoints[0].position);
+            SpawnBlueMissile(runner);
         }
         else
         {
-            //NetworkObject ms2 = runner.Spawn(redEnemyPrefab, msspawnPoints[1].position, Quaternion.identity);
-
-            //EnemySpawner.Instance.SpawnRedEnemy_(msspawnPoints[1  ].position);
+            SpawnRedMissile(runner);
         }
+    }
+
+    public void SpawnBlueMissile(NetworkRunner runner)
+    {
+        runner.Spawn(blueEnemyPrefab, msspawnPoints[0].position, Quaternion.identity);
+    }
+
+    public void SpawnRedMissile(NetworkRunner runner)
+    {
+        runner.Spawn(redEnemyPrefab, msspawnPoints[1].position, Quaternion.identity);
+    }
+
+    void SpawnEnemyForSinglePlayer()
+    {
+        SpawnBlueMissile();
+        SpawnRedMissile();
+    }
+
+    public void SpawnBlueMissile()
+    {
+        Instantiate(blueEnemyPrefab, msspawnPoints[0].position, Quaternion.identity);
+    }
+
+    public void SpawnRedMissile()
+    {
+        Instantiate(redEnemyPrefab, msspawnPoints[1].position, Quaternion.identity);
     }
 
     void AssignTime(string txt)
@@ -256,9 +270,9 @@ public class GameManager : MonoBehaviour
     }
 
     // Method to change bot difficulty during runtime
-    public void SetBotDifficulty(int difficulty)
+    public void SetBotDifficulty(int clickInterval)
     {
-        botDifficulty = difficulty;
+        ButtonManager.Instance.botClickInterval = clickInterval;
     }
 
     public void InitializeSinglePlayerGame()
@@ -280,27 +294,6 @@ public class GameManager : MonoBehaviour
         IsSinglePlayerMode = false;
         StartCountdown();
     }
-
-    public void AddScore(int points)
-    {
-       // if (gameState == GameState.OVER) return;
-
-       // score += points;
-       // enemiesKilled++;
-
-       // // Check for high score
-       // if (score > highScore)
-       // {
-       //     highScore = score;
-       //     PlayerPrefs.SetInt("HighScore", highScore);
-       // }
-
-       // Check for wave progression
-
-       //CheckWaveProgression();
-
-       //UpdateUI();
-    }
     
     public void AddSpaceshipScore(SpaceshipController.SpaceshipType spaceshipType, int points)
     {
@@ -319,72 +312,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RPCScoreUpdate()
-    {
-
-    }
-    
-    void CheckWaveProgression()
-    {
-        // Increase wave every 10 enemies killed
-        int newWave = (enemiesKilled / 10) + 1;
-        if (newWave > wave)
-        {
-            wave = newWave;
-            OnWaveComplete();
-        }
-    }
-    
-    void OnWaveComplete()
-    {
-        // Increase difficulty
-        if (enemySpawner != null)
-        {
-            enemySpawner.IncreaseDifficulty();
-        }
-        
-        // Show wave complete message
-        if (uiManager != null)
-        {
-            uiManager.ShowWaveComplete(wave);
-        }
-    }
-    
-    public void LoseLife()
-    {
-        //if (gameState == GameState.OVER) return;
-        
-        //lives--;
-        //UpdateUI();
-        
-        //if (lives <= 0)
-        //{
-        //    GameOver();
-        //}
-        //else
-        //{
-        //    // Respawn player or show respawn message
-        //    RespawnPlayer();
-        //}
-    }
-    
-    void RespawnPlayer()
-    {
-        // Find player and reset position
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            PlayerController playerController = player.GetComponent<PlayerController>();
-            if (playerController != null)
-            {
-                playerController.currentHealth = playerController.maxHealth;
-            }
-            
-            // Reset player position
-            player.transform.position = Vector3.zero;
-        }
-    }
-    
     public void GameOver()
     {
         gameState = GameState.OVER;
@@ -436,9 +363,6 @@ public class GameManager : MonoBehaviour
             AudioManager.Instance.PlayDrawMusic();    
         }
 
-        // Send game state update
-        //SendGameStateUpdate(player1Score_, player2Score_);
-        
         IFrameBridge.Instance.PostMatchResult(message, player1Score_, player2Score_);
 
         GameoverScreen.SetActive(true);
@@ -463,73 +387,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void TogglePause()
-    {
-        if (gameState == GameState.OVER) return;
-        
-        isPaused = !isPaused;
-        //Time.timeScale = isPaused ? 0f : 1f;
-        
-        if (uiManager != null)
-        {
-            uiManager.ShowPauseMenu(isPaused);
-        }
-    }
-    
-    public void RestartGame()
-    {
-        //Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-    
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-    
-    void UpdateUI()
-    {
-        //if (uiManager != null)
-        //{
-        //    uiManager.UpdateScore(score);
-        //    uiManager.UpdateLives(lives);
-        //    uiManager.UpdateWave(wave);
-        //    uiManager.UpdateTime(gameTime);
-        //}
-    }
-    
-    //public int GetScore()
-    //{
-    //    return score;
-    //}
-    
-    //public int GetHighScore()
-    //{
-    //    return highScore;
-    //}
-    
-    //public int GetLives()
-    //{
-    //    return lives;
-    //}
-    
-    public int GetWave()
-    {
-        return wave;
-    }
-    
-    public float GetGameTime()
-    {
-        return gameTime;
-    }
-
     public void HandleSpaceShip(SpaceshipController.SpaceshipType spaceshipType, Vector3 pos)
     {
         StartCoroutine(IEHandleSpaceShip(spaceshipType, pos));
     }
+
     public IEnumerator IEHandleSpaceShip(SpaceshipController.SpaceshipType spaceshipType, Vector3 pos)
-    {
-        //go.SetActive(false);        
+    {        
         yield return new WaitForSeconds(1.0f);
 
         if (!IsSinglePlayerMode)
@@ -537,27 +401,28 @@ public class GameManager : MonoBehaviour
             if (spaceshipType == SpaceshipController.SpaceshipType.Blue && localPlayer.playerID == 1)
             {
                 Vector3 offset = new Vector3(Random.Range(-2.5f, 2.5f), 0, 0);
-                FusionConnector.instance.NetworkRunner.Spawn(blueObjectPrefab, spawnPoints[0].position + offset, Quaternion.identity);
+                SpawnBlueShip(runner);
             }
             if (spaceshipType == SpaceshipController.SpaceshipType.Red && localPlayer.playerID != 1)
             {
                 Vector3 offset = new Vector3(Random.Range(-2.5f, 2.5f), 0, 0);
-                FusionConnector.instance.NetworkRunner.Spawn(redObjectPrefab, spawnPoints[1].position + offset, Quaternion.identity);
+                SpawnRedShip(runner);
             }
         }
         else
         {
             if (spaceshipType == SpaceshipController.SpaceshipType.Blue)
             {
-                spaceshipSpawner.SpawnBlueSpaceship();
+                SpawnBlueShip();
             }
 
             if (spaceshipType == SpaceshipController.SpaceshipType.Red)
             {
-                spaceshipSpawner.SpawnRedSpaceship();
+                SpawnRedShip();
             }
         }
     }
+
     //public IEnumerator IEHandleSpaceShip(GameObject go, Vector3 pos, Vector3 offset)
     //{
     //    //go.SetActive(false);        

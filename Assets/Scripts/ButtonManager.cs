@@ -15,8 +15,6 @@ public class ButtonManager : MonoBehaviour
     
     [Header("Button Settings")]
     public float buttonCooldown = 0.5f;
-    //public Color activeButtonColor = Color.green;
-    //public Color inactiveButtonColor = Color.white;
     
     [Header("Bot Settings")]
     public bool enableBotMode = false;
@@ -89,21 +87,15 @@ public class ButtonManager : MonoBehaviour
 
         if (!GameManager.Instance.IsSinglePlayerMode)
             GameManager.Instance.localPlayer.RPC_OnRedButtonClicked(redEnemy.transform.position);
-
-        // Spawn new red enemy
-        if (enemySpawner != null)
-        {
-            StartCoroutine(enemySpawner.SpawnRedEnemy());
-        }
     }
 
     public void OnRedButtonClicked_(Vector2 pos)
     {
         RedEnemy redEnemy = FindObjectOfType<RedEnemy>();
 
-        redEnemy.transform.position = pos;
-
         redEnemy.StopHorizontalMovement();
+
+        redEnemy.transform.position = pos;
 
         // Start cooldown
         StartCoroutine(RedButtonCooldown());
@@ -121,21 +113,15 @@ public class ButtonManager : MonoBehaviour
 
         if (!GameManager.Instance.IsSinglePlayerMode)
             GameManager.Instance.localPlayer.RPC_OnBlueButtonClicked(blueEnemy.transform.position);
-
-        // Spawn new blue enemy
-        if (enemySpawner != null)
-        {
-            StartCoroutine(enemySpawner.SpawnBlueEnemy());
-        }
     }
 
     public void OnBlueButtonClicked_(Vector2 pos)
     {
         BlueEnemy blueEnemy = FindObjectOfType<BlueEnemy>();
 
-        blueEnemy.transform.position = pos;
-
         blueEnemy.StopHorizontalMovement();
+
+        blueEnemy.transform.position = pos;
 
         // Start cooldown
         StartCoroutine(BlueButtonCooldown());
@@ -234,21 +220,6 @@ public class ButtonManager : MonoBehaviour
         }
     }
     
-    public void SetButtonCooldown(float cooldown)
-    {
-        buttonCooldown = cooldown;
-    }
-    
-    public bool IsRedButtonOnCooldown()
-    {
-        return redButtonOnCooldown;
-    }
-    
-    public bool IsBlueButtonOnCooldown()
-    {
-        return blueButtonOnCooldown;
-    }
-    
     /// <summary>
     /// Bot method that handles automatic red button clicking
     /// </summary>
@@ -283,39 +254,6 @@ public class ButtonManager : MonoBehaviour
         
         // Call the existing OnRedButtonClicked method
         OnRedButtonClicked();
-    }
-    
-    /// <summary>
-    /// Enable or disable bot mode
-    /// </summary>
-    public void SetBotMode(bool enabled)
-    {
-        enableBotMode = enabled;
-        botTimer = 0f; // Reset timer when toggling bot mode
-    }
-    
-    /// <summary>
-    /// Set bot click interval
-    /// </summary>
-    public void SetBotClickInterval(float interval)
-    {
-        botClickInterval = Mathf.Max(0.1f, interval); // Minimum 0.1 seconds
-    }
-    
-    /// <summary>
-    /// Set whether bot should click red button
-    /// </summary>
-    public void SetBotClickRedButton(bool clickRed)
-    {
-        botClickRedButton = clickRed;
-    }
-    
-    /// <summary>
-    /// Get current bot mode status
-    /// </summary>
-    public bool IsBotModeEnabled()
-    {
-        return enableBotMode;
     }
 }
 

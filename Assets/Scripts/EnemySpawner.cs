@@ -97,52 +97,30 @@ public class EnemySpawner : MonoBehaviour
         rightBlueSpawn.transform.position = new Vector3(screenBounds.x - 1f, screenBounds.y + 1f, 0f);
         spawnPoints[3] = rightBlueSpawn.transform;
     }
-    
-    IEnumerator SpawnWaves()
-    {
-        while (isSpawning)
-        {
-            yield return new WaitForSeconds(spawnDelay);
-            
-            // Spawn one red and one blue enemy on each side
-            if (currentEnemyCount < maxEnemies)
-            {
-                SpawnEnemyPair();
-                enemiesSpawnedThisWave += 4; // 2 red + 2 blue
-            }
-            
-            // Wait for wave to complete
-            yield return new WaitForSeconds(waveDelay);
-        }
-    }
-    
+
     void SpawnEnemyPair()
     {
-        //if (GameManager.Instance.IsSinglePlayerMode)
+        if (GameManager.Instance.IsSinglePlayerMode)
         {
             if (redEnemyPrefab != null && spawnPoints[0] != null)
             {
                 GameObject leftRed = Instantiate(redEnemyPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
-                ConfigureEnemyForWave(leftRed);
             }
 
             if (blueEnemyPrefab != null && spawnPoints[1] != null)
             {
                 GameObject leftBlue = Instantiate(blueEnemyPrefab, spawnPoints[1].position, spawnPoints[1].rotation);
-                ConfigureEnemyForWave(leftBlue);
             }
         }
     }
 
     public void SpawnEnemyForMultiplayer()
     {
-
         if (GameManager.Instance.localPlayer.localPlayerID == 0)
         {
             if (blueEnemyPrefab != null && spawnPoints[1] != null)
             {
                 GameObject leftBlue = Instantiate(blueEnemyPrefab, spawnPoints[1].position, spawnPoints[1].rotation);
-                ConfigureEnemyForWave(leftBlue);
             }
         }
         else
@@ -150,28 +128,11 @@ public class EnemySpawner : MonoBehaviour
             if (redEnemyPrefab != null && spawnPoints[0] != null)
             {
                 GameObject leftRed = Instantiate(redEnemyPrefab, spawnPoints[0].position, spawnPoints[0].rotation);
-                ConfigureEnemyForWave(leftRed);
             }
         }
     }
     
-    public void ConfigureEnemyForWave(GameObject enemy)
-    {
-        EnemyController enemyController = enemy.GetComponent<EnemyController>();
-        if (enemyController != null)
-        {
-            // Increase enemy health based on wave
-            int wave = GameManager.Instance ? GameManager.Instance.GetWave() : 1;
-            enemyController.maxHealth = Mathf.RoundToInt(enemyController.maxHealth * (1 + wave * 0.2f));
-            enemyController.currentHealth = enemyController.maxHealth;
-            
-            // Increase score value
-            enemyController.scoreValue = Mathf.RoundToInt(enemyController.scoreValue * (1 + wave * 0.1f));
-            
-            // Increase movement speed
-            enemyController.moveSpeed = Mathf.Min(enemyController.moveSpeed * (1 + wave * 0.1f), 8f);
-        }
-    }
+
     
     public void IncreaseDifficulty()
     {
@@ -188,37 +149,6 @@ public class EnemySpawner : MonoBehaviour
     public void StopSpawning()
     {
         isSpawning = false;
-    }
-    
-    public void StartSpawning()
-    {
-        isSpawning = true;
-        StartCoroutine(SpawnWaves());
-    }
-    
-    public void SetSpawnRate(float rate)
-    {
-        spawnRate = rate;
-    }
-    
-    public void SetMaxEnemies(int max)
-    {
-        maxEnemies = max;
-    }
-    
-    public int GetCurrentEnemyCount()
-    {
-        return currentEnemyCount;
-    }
-    
-    public int GetEnemiesSpawnedThisWave()
-    {
-        return enemiesSpawnedThisWave;
-    }
-    
-    public void ResetWave()
-    {
-        enemiesSpawnedThisWave = 0;
     }
 
     public IEnumerator SpawnRedEnemy()
@@ -249,9 +179,8 @@ public class EnemySpawner : MonoBehaviour
             if (redEnemyPrefab != null)
             {
                 GameObject leftRed = Instantiate(redEnemyPrefab, spawnPointPos, Quaternion.identity);
-                ConfigureEnemyForWave(leftRed);
             }
-        //  }
+        //}
         //Debug.Log("Red enemy spawned!");
     }
     
@@ -283,7 +212,6 @@ public class EnemySpawner : MonoBehaviour
             if (blueEnemyPrefab != null)
             {
                 GameObject leftBlue = Instantiate(blueEnemyPrefab, spawnPointPos, Quaternion.identity);
-                ConfigureEnemyForWave(leftBlue);
             }
         //}
         //Debug.Log("Blue enemy spawned!");

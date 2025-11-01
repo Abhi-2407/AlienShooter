@@ -44,6 +44,8 @@ GameObject:
   - component: {fileID: -8449194409502187684}
   - component: {fileID: 694123632596130546}
   - component: {fileID: 4455732235068888653}
+  - component: {fileID: -970939087554539246}
+  - component: {fileID: -7681462233767870957}
   m_Layer: 0
   m_Name: Enemy_Red
   m_TagString: Enemy
@@ -227,3 +229,40 @@ MonoBehaviour:
   redScoreValue: 15
   redHealth: 60
   redMoveSpeed: 1
+--- !u!114 &-970939087554539246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4933997475272667534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 4090892255
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 4455732235068888653}
+  - {fileID: -7681462233767870957}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &-7681462233767870957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4933997475272667534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0

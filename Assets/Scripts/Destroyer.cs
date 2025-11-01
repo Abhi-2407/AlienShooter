@@ -4,27 +4,40 @@ public class Destroyer : MonoBehaviour
 {
     [Header("Effects")]
     public GameObject explosionEffect;
-    public AudioClip collisionSound;
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Check collision with enemies
-        if (other.CompareTag("BlueEnemy") || other.CompareTag("RedEnemy"))
+        if (other.CompareTag("BlueEnemy"))
         {
-            HandleEnemyCollision(other.gameObject);
+            HandleBlueMissile(other.gameObject);
+        }
+
+        if(other.CompareTag("RedEnemy"))
+        {
+            HandleRedMissile(other.gameObject);
         }
     }
 
-    void HandleEnemyCollision(GameObject enemy)
+    void HandleBlueMissile(GameObject missile)
     {
-        // Create explosion effects
-        CreateExplosionEffect(enemy.transform);
+        CreateExplosionEffect(missile.transform);
 
-        // Play collision sound
-        AudioManager.Instance.PlayExplosionSound();
+        PlayExplosionSound();
 
-        // Destroy both spaceship and enemy
-        DestroyEnemy(enemy);
+        GameManager.Instance.SpawnBlueMissile();
+
+        Destroy(missile);
+    }
+
+    void HandleRedMissile(GameObject missile)
+    {
+        CreateExplosionEffect(missile.transform);
+
+        PlayExplosionSound();
+
+        GameManager.Instance.SpawnRedMissile();
+
+        Destroy(missile);
     }
 
     void CreateExplosionEffect(Transform trans)
@@ -35,21 +48,8 @@ public class Destroyer : MonoBehaviour
         }
     }
 
-    void PlayCollisionSound(Transform trans)
+    void PlayExplosionSound()
     {
-        if (collisionSound != null)
-        {
-            AudioSource.PlayClipAtPoint(collisionSound, trans.position);
-        }
-    }
-
-    void DestroyEnemy(GameObject enemy)
-    {
-        EnemyController enemyController = enemy.GetComponent<EnemyController>();
-        if (enemyController != null)
-        {
-            enemyController.isDead = true;
-        }
-        Destroy(enemy);
+        AudioManager.Instance.PlayExplosionSound();
     }
 }

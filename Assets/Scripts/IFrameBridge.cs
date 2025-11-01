@@ -186,9 +186,9 @@ public class IFrameBridge : MonoBehaviour
 
         // Set bot difficulty based on opponent ID
         if (botLevel == AIMode.Easy)
-            gameManager.SetBotDifficulty(0);
+            gameManager.SetBotDifficulty(5);
         else if (botLevel == AIMode.Hard)
-            gameManager.SetBotDifficulty(1);
+            gameManager.SetBotDifficulty(2);
 
         // Initialize singleplayer game systems
         gameManager.InitializeSinglePlayerGame();
@@ -206,7 +206,7 @@ public class IFrameBridge : MonoBehaviour
         FusionConnector.instance.ConnectToServer(MatchId, Region);
 
         // For multiplayer mode, disable bot AI (set difficulty to 0 for human vs human)
-        gameManager.SetBotDifficulty(0);
+        gameManager.SetBotDifficulty(5);
         gameManager.IsSinglePlayerMode = false;
 
         Debug.Log("[IFrameBridge] Multiplayer Mode initialized successfully");

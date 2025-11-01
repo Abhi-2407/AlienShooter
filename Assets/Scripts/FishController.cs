@@ -59,17 +59,20 @@ public class FishController : MonoBehaviour
 
     void Update()
     {
-        if (isCaught)
+        if (GameManager.Instance.gameState == GameState.START)
         {
-            HandleCatching();
-        }
-        else
-        {
-            SwimInDirection();
-        }
+            if (isCaught)
+            {
+                HandleCatching();
+            }
+            else
+            {
+                SwimInDirection();
+            }
 
-        // Enforce yaw-only rotation: zero X and Z, keep Y
-        ConstrainRotationToYaw();
+            // Enforce yaw-only rotation: zero X and Z, keep Y
+            ConstrainRotationToYaw();
+        } 
     }
 
     void CalculateSwimBounds()
