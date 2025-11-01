@@ -56,18 +56,18 @@ public class GameManager : MonoBehaviour
     public SpaceshipSpawner spaceshipSpawner;
 
     [Header("Spawn Settings")]
-    public Transform[] spawnPoints;
-    public Transform[] msspawnPoints;
+    public Transform[] shipPoints;
+    public Transform[] missilePoints;
 
     public NetworkPlayer localPlayer;
 
     [Header("Local Player Objects")]
-    public NetworkObject blueObjectPrefab;
-    public NetworkObject blueEnemyPrefab;
+    public NetworkObject blueShipPrefab;
+    public NetworkObject blueMissilePrefab;
 
     [Header("Remote Player Objects")]
-    public NetworkObject redObjectPrefab;
-    public NetworkObject redEnemyPrefab;
+    public NetworkObject redShipPrefab;
+    public NetworkObject redMissilePrefab;
 
     NetworkRunner runner;
 
@@ -124,6 +124,7 @@ public class GameManager : MonoBehaviour
 
         if (IsSinglePlayerMode)
         {
+            SpawnShipForSinglePlayer();
             SpawnEnemyForSinglePlayer();
         }
     }
@@ -203,22 +204,28 @@ public class GameManager : MonoBehaviour
 
     public void SpawnBlueShip(NetworkRunner runner)
     {
-        runner.Spawn(blueObjectPrefab, spawnPoints[0].position, Quaternion.identity);
+        runner.Spawn(blueShipPrefab, shipPoints[0].position, Quaternion.identity);
     }
 
     public void SpawnRedShip(NetworkRunner runner)
     {
-        runner.Spawn(redObjectPrefab, spawnPoints[1].position, Quaternion.identity);
+        runner.Spawn(redShipPrefab, shipPoints[1].position, Quaternion.identity);
+    }
+
+    void SpawnShipForSinglePlayer()
+    {
+        SpawnBlueShip();
+        SpawnRedShip();
     }
 
     public void SpawnBlueShip()
     {
-        Instantiate(blueObjectPrefab, spawnPoints[0].position, Quaternion.identity);
+        Instantiate(blueShipPrefab, shipPoints[0].position, Quaternion.identity);
     }
 
     public void SpawnRedShip()
     {
-        Instantiate(redObjectPrefab, spawnPoints[1].position, Quaternion.identity);
+        Instantiate(redShipPrefab, shipPoints[1].position, Quaternion.identity);
     }
 
     public void SpawnMissileForMultiPlayer(NetworkRunner runner)
@@ -235,12 +242,12 @@ public class GameManager : MonoBehaviour
 
     public void SpawnBlueMissile(NetworkRunner runner)
     {
-        runner.Spawn(blueEnemyPrefab, msspawnPoints[0].position, Quaternion.identity);
+        runner.Spawn(blueMissilePrefab, missilePoints[0].position, Quaternion.identity);
     }
 
     public void SpawnRedMissile(NetworkRunner runner)
     {
-        runner.Spawn(redEnemyPrefab, msspawnPoints[1].position, Quaternion.identity);
+        runner.Spawn(redMissilePrefab, missilePoints[1].position, Quaternion.identity);
     }
 
     void SpawnEnemyForSinglePlayer()
@@ -251,12 +258,12 @@ public class GameManager : MonoBehaviour
 
     public void SpawnBlueMissile()
     {
-        Instantiate(blueEnemyPrefab, msspawnPoints[0].position, Quaternion.identity);
+        Instantiate(blueMissilePrefab, missilePoints[0].position, Quaternion.identity);
     }
 
     public void SpawnRedMissile()
     {
-        Instantiate(redEnemyPrefab, msspawnPoints[1].position, Quaternion.identity);
+        Instantiate(redMissilePrefab, missilePoints[1].position, Quaternion.identity);
     }
 
     void AssignTime(string txt)
@@ -422,22 +429,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
-    //public IEnumerator IEHandleSpaceShip(GameObject go, Vector3 pos, Vector3 offset)
-    //{
-    //    //go.SetActive(false);        
-    //    yield return new WaitForSeconds(1.0f);
-    //    go.GetComponent<SpaceshipController>().isActive = true;
-    //    go.transform.position = pos + offset;
-    //    go.SetActive(true);
-    //    go.transform.GetComponent<SpriteRenderer>().enabled = true;
-    //    go.transform.GetComponent<Collider2D>().enabled = true;
-
-    //    for(int i = 0;i<go.transform.childCount; i++)
-    //    {
-    //        go.transform.GetChild(i).gameObject.SetActive(true);
-    //    }
-    //}
 
     public void Rpc_HandleSpaceShip(SpaceshipController.SpaceshipType spaceshipType, Vector3 pos, Vector3 offset)
     {

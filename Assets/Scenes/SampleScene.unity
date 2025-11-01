@@ -1076,7 +1076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 346647894}
   m_Layer: 0
-  m_Name: Point_Left
+  m_Name: MissilePoint_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5251,7 +5251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1683030347}
   m_Layer: 0
-  m_Name: Point_Right
+  m_Name: MissilePoint_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5399,17 +5399,17 @@ MonoBehaviour:
   enemySpawner: {fileID: 0}
   fishSpawner: {fileID: 1181155777}
   spaceshipSpawner: {fileID: 0}
-  spawnPoints:
+  shipPoints:
   - {fileID: 2021729369}
   - {fileID: 1950138658}
-  msspawnPoints:
+  missilePoints:
   - {fileID: 346647894}
   - {fileID: 1683030347}
   localPlayer: {fileID: 0}
-  blueObjectPrefab: {fileID: 1925971192673108519, guid: 6f3e4a1cab3020047868d18d962c9e62, type: 3}
-  blueEnemyPrefab: {fileID: 3032898203827653986, guid: 25e6345047f9f9b4ab6f5d20283c37d2, type: 3}
-  redObjectPrefab: {fileID: -1431810368034903958, guid: 2852ef9811727db4b9b0dc740ba2efcf, type: 3}
-  redEnemyPrefab: {fileID: -970939087554539246, guid: e32d0e100830a394f854a82730165051, type: 3}
+  blueShipPrefab: {fileID: 1925971192673108519, guid: 6f3e4a1cab3020047868d18d962c9e62, type: 3}
+  blueMissilePrefab: {fileID: 3032898203827653986, guid: 25e6345047f9f9b4ab6f5d20283c37d2, type: 3}
+  redShipPrefab: {fileID: -1431810368034903958, guid: 2852ef9811727db4b9b0dc740ba2efcf, type: 3}
+  redMissilePrefab: {fileID: -970939087554539246, guid: e32d0e100830a394f854a82730165051, type: 3}
 --- !u!4 &1713237047
 Transform:
   m_ObjectHideFlags: 0
@@ -6266,7 +6266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1950138658}
   m_Layer: 0
-  m_Name: Point_Right
+  m_Name: ShipPoint_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6478,7 +6478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2021729369}
   m_Layer: 0
-  m_Name: Point_Left
+  m_Name: ShipPoint_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
