@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 8077200833155911449}
   - component: {fileID: 5229796173071540395}
   - component: {fileID: 1925971192673108519}
-  - component: {fileID: 534595679167695844}
   - component: {fileID: -6765323502955354668}
   - component: {fileID: 2869605262745346052}
+  - component: {fileID: 2659850970156073035}
   m_Layer: 0
   m_Name: SpaceShip_Blue
   m_TagString: Untagged
@@ -619,26 +619,9 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8233939168455090321}
-  - {fileID: 534595679167695844}
   - {fileID: -6765323502955354668}
+  - {fileID: 2659850970156073035}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &534595679167695844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1892247583263975167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
 --- !u!114 &-6765323502955354668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,6 +684,29 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 3.5, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &2659850970156073035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892247583263975167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e690b5fb1084f5ab1c86457af401d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &2811421569860294518
 GameObject:
   m_ObjectHideFlags: 0

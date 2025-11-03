@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
     public BlueEnemy blueMissile;
     public RedEnemy redMissile;
 
-    NetworkRunner runner;
+    public  NetworkRunner runner;
 
     public static GameManager Instance { get; private set; }
     

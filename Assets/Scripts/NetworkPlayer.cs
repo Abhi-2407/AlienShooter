@@ -1,4 +1,4 @@
-  using UnityEngine;
+using UnityEngine;
 using Fusion;
 using System.Collections;
 using static Fusion.Sockets.NetBitBuffer;

@@ -47,12 +47,16 @@ public class ButtonManager : MonoBehaviour
         if (redButton != null)
         {
             if (!GameManager.Instance.IsSinglePlayerMode)
-                redButton.onClick.AddListener(OnRedButtonClicked);
+            {
+                redButton.gameObject.SetActive(true);
+                //redButton.onClick.AddListener(OnRedButtonClicked);
+            }
         }
 
         if (blueButton != null)
         {
-            blueButton.onClick.AddListener(OnBlueButtonClicked);
+            blueButton.gameObject.SetActive(true);
+            //blueButton.onClick.AddListener(OnBlueButtonClicked);
         }
     }
 
