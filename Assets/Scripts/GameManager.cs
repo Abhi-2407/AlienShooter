@@ -69,6 +69,9 @@ public class GameManager : MonoBehaviour
     public NetworkObject redShipPrefab;
     public NetworkObject redMissilePrefab;
 
+    public BlueEnemy blueMissile;
+    public RedEnemy redMissile;
+
     NetworkRunner runner;
 
     public static GameManager Instance { get; private set; }
@@ -242,12 +245,14 @@ public class GameManager : MonoBehaviour
 
     public void SpawnBlueMissile(NetworkRunner runner)
     {
-        runner.Spawn(blueMissilePrefab, missilePoints[0].position, Quaternion.identity);
+        NetworkObject obj = runner.Spawn(blueMissilePrefab, missilePoints[0].position, Quaternion.identity);
+        //blueMissile = obj.GetComponent<BlueEnemy>();
     }
 
     public void SpawnRedMissile(NetworkRunner runner)
     {
-        runner.Spawn(redMissilePrefab, missilePoints[1].position, Quaternion.identity);
+        NetworkObject obj = runner.Spawn(redMissilePrefab, missilePoints[1].position, Quaternion.identity);
+        //redMissile = obj.GetComponent<RedEnemy>();
     }
 
     void SpawnEnemyForSinglePlayer()
@@ -258,12 +263,14 @@ public class GameManager : MonoBehaviour
 
     public void SpawnBlueMissile()
     {
-        Instantiate(blueMissilePrefab, missilePoints[0].position, Quaternion.identity);
+        NetworkObject obj = Instantiate(blueMissilePrefab, missilePoints[0].position, Quaternion.identity);
+        //blueMissile = obj.GetComponent<BlueEnemy>();
     }
 
     public void SpawnRedMissile()
     {
-        Instantiate(redMissilePrefab, missilePoints[1].position, Quaternion.identity);
+        NetworkObject obj = Instantiate(redMissilePrefab, missilePoints[1].position, Quaternion.identity);
+        //redMissile = obj.GetComponent<RedEnemy>();
     }
 
     void AssignTime(string txt)

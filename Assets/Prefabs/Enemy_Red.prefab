@@ -41,11 +41,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8317122154676618167}
   - component: {fileID: 1430352155671606017}
-  - component: {fileID: -8449194409502187684}
   - component: {fileID: 694123632596130546}
   - component: {fileID: 4455732235068888653}
   - component: {fileID: -970939087554539246}
-  - component: {fileID: -7681462233767870957}
+  - component: {fileID: 3665000319377379839}
+  - component: {fileID: 7630773419826231894}
   m_Layer: 0
   m_Name: Enemy_Red
   m_TagString: Enemy
@@ -124,33 +124,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &-8449194409502187684
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4933997475272667534}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!70 &694123632596130546
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -200,35 +173,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54924b925ce54c94b9e0d0be0107bde3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 20
-  rotationSpeed: 50
-  moveDirection: {x: 0, y: -1}
-  isHorizontalEnemy: 1
-  horizontalRange: 3
+  canMove: 0
+  rb: {fileID: 3665000319377379839}
   horizontalSpeed: 8
   verticalSpeed: 2
+  horizontalRange: 3
   spawnPoint: {fileID: 0}
-  maxHealth: 50
-  currentHealth: 0
-  scoreValue: 10
-  enemyBulletPrefab: {fileID: 0}
-  firePoint: {fileID: 0}
-  fireRate: 1
-  bulletSpeed: 5
-  shootingRange: 8
-  canShoot: 1
-  canRotate: 0
-  detectionRange: 10
-  explosionEffect: {fileID: 0}
-  powerUpPrefabs: []
-  powerUpDropChance: 0.1
-  nextFireTime: 0
-  rb: {fileID: -8449194409502187684}
-  isDead: 0
-  redColor: {r: 1, g: 1, b: 1, a: 1}
-  redScoreValue: 15
-  redHealth: 60
-  redMoveSpeed: 1
 --- !u!114 &-970939087554539246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,9 +197,36 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4455732235068888653}
-  - {fileID: -7681462233767870957}
+  - {fileID: 7630773419826231894}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &-7681462233767870957
+--- !u!50 &3665000319377379839
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4933997475272667534}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &7630773419826231894
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -258,11 +235,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 4933997475272667534}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: c5e690b5fb1084f5ab1c86457af401d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01

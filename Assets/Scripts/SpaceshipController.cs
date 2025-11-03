@@ -205,8 +205,11 @@ public class SpaceshipController : NetworkBehaviour
         }
         else
         {
-            runner.Despawn(missile.GetComponent<NetworkObject>());
-            GameManager.Instance.SpawnBlueMissile(runner);
+            if (missile.GetComponent<NetworkObject>().HasStateAuthority)
+            {
+                GameManager.Instance.SpawnBlueMissile(runner);
+                runner.Despawn(missile.GetComponent<NetworkObject>());
+            }
         }
 
         HandleSpaceShip();
@@ -225,8 +228,11 @@ public class SpaceshipController : NetworkBehaviour
         }
         else
         {
-            runner.Despawn(missile.GetComponent<NetworkObject>());
-            GameManager.Instance.SpawnRedMissile(runner); 
+            if (missile.GetComponent<NetworkObject>().HasStateAuthority)
+            {
+                GameManager.Instance.SpawnRedMissile(runner);
+                runner.Despawn(missile.GetComponent<NetworkObject>());
+            }
         }
 
         HandleSpaceShip();

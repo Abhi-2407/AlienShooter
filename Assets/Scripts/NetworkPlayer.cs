@@ -165,6 +165,18 @@ public class NetworkPlayer : NetworkBehaviour
         localGameManager.InitializeMultiplayerGame();
     }
 
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    public void RPC_DropBlueMissile()
+    {
+        GameManager.Instance.blueMissile.DropMissile();
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
+    public void RPC_DropRedMissile()
+    {
+        GameManager.Instance.redMissile.DropMissile();
+    }
+
     // RPC methods for player actions
     //[Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     //[Rpc(RpcSources.All, RpcTargets.All)]
@@ -172,7 +184,7 @@ public class NetworkPlayer : NetworkBehaviour
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
     public void RPC_OnRedButtonClicked(Vector2 pos)
     {
-        ButtonManager.Instance.OnRedButtonClicked_(pos);
+        //ButtonManager.Instance.OnRedButtonClicked_(pos);
 
         //Debug.Log("RPC_RedButtonClick");
     }
@@ -180,7 +192,7 @@ public class NetworkPlayer : NetworkBehaviour
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All, InvokeLocal = false)]
     public void RPC_OnBlueButtonClicked(Vector2 pos)
     {
-        ButtonManager.Instance.OnBlueButtonClicked_(pos);
+        //ButtonManager.Instance.OnBlueButtonClicked_(pos);
 
         //Debug.Log("RPC_BlueButtonClick");
     }

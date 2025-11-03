@@ -1,9 +1,17 @@
+using Fusion;
 using UnityEngine;
 
 public class Destroyer : MonoBehaviour
 {
     [Header("Effects")]
     public GameObject explosionEffect;
+
+    NetworkRunner runner;
+
+    void Start()
+    {
+        runner = FusionConnector.instance.NetworkRunner;
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -12,7 +20,7 @@ public class Destroyer : MonoBehaviour
             HandleBlueMissile(other.gameObject);
         }
 
-        if(other.CompareTag("RedEnemy"))
+        if (other.CompareTag("RedEnemy"))
         {
             HandleRedMissile(other.gameObject);
         }
@@ -24,9 +32,19 @@ public class Destroyer : MonoBehaviour
 
         PlayExplosionSound();
 
-        GameManager.Instance.SpawnBlueMissile();
-
-        Destroy(missile);
+        if (GameManager.Instance.IsSinglePlayerMode)
+        {
+            Destroy(missile);
+            GameManager.Instance.SpawnBlueMissile();
+        }
+        else
+        {
+            if (missile.GetComponent<NetworkObject>().HasStateAuthority)
+            {
+                GameManager.Instance.SpawnBlueMissile(runner);
+                runner.Despawn(missile.GetComponent<NetworkObject>());
+            }
+        }
     }
 
     void HandleRedMissile(GameObject missile)
@@ -35,9 +53,19 @@ public class Destroyer : MonoBehaviour
 
         PlayExplosionSound();
 
-        GameManager.Instance.SpawnRedMissile();
-
-        Destroy(missile);
+        if (GameManager.Instance.IsSinglePlayerMode)
+        {
+            Destroy(missile);
+            GameManager.Instance.SpawnRedMissile();
+        }
+        else
+        {
+            if (missile.GetComponent<NetworkObject>().HasStateAuthority)
+            {
+                GameManager.Instance.SpawnRedMissile(runner);
+                runner.Despawn(missile.GetComponent<NetworkObject>());
+            }
+        }
     }
 
     void CreateExplosionEffect(Transform trans)

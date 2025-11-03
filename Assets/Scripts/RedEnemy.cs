@@ -1,52 +1,92 @@
+using Fusion;
 using UnityEngine;
 
-public class RedEnemy : EnemyController
+public class RedEnemy : NetworkBehaviour
 {
-    public float redMoveSpeed = 1.5f;
+    public bool canMove;
+    public Rigidbody2D rb;
+    public float horizontalSpeed = 1f;
+    public float verticalSpeed = 3f;
+    private bool movingRight = true;
+    public float horizontalRange = 3f;
+    public Transform spawnPoint;
 
     void Start()
     {
-        isHorizontalEnemy = true;
+        canMove = true;
 
         gameObject.tag = "RedEnemy";
         spawnPoint = GameManager.Instance.missilePoints[1];
 
-        // Call base Start after setting properties
-        base.Start();
+        GameManager.Instance.redMissile = this;
     }
 
     void Update()
     {
-        if (GameManager.Instance.IsSinglePlayerMode)
+        if (canMove)
         {
-            if (!isDead && GameManager.Instance.gameState == GameState.START)
+            if (GameManager.Instance.IsSinglePlayerMode)
             {
-                HandleMovement(spawnPoint.position);
-            }
-            if (!isDead && GameManager.Instance.gameState == GameState.OVER)
-            {
-                StopMovement();
-            }
-        }
-        else
-        {
-            if (Object.HasStateAuthority)
-            {
-                if (!isDead && GameManager.Instance.gameState == GameState.START)
+                if (GameManager.Instance.gameState == GameState.START)
                 {
                     HandleMovement(spawnPoint.position);
                 }
-                if (!isDead && GameManager.Instance.gameState == GameState.OVER)
+                if (GameManager.Instance.gameState == GameState.OVER)
                 {
                     StopMovement();
+                }
+            }
+            else
+            {
+                if (Object.HasStateAuthority)
+                {
+                    if (GameManager.Instance.gameState == GameState.START)
+                    {
+                        HandleMovement(spawnPoint.position);
+                    }
+                    if (GameManager.Instance.gameState == GameState.OVER)
+                    {
+                        StopMovement();
+                    }
                 }
             }
         }
     }
 
-    public void StopHorizontalMovement()
+    void HandleMovement(Vector3 centerPos)
     {
-        // Call base method and add red enemy specific behavior
-        base.StopHorizontalMovement();
+        // Calculate horizontal movement within range
+        float horizontalOffset = transform.position.x - centerPos.x;
+
+        // Check if we need to change direction
+        if (horizontalOffset >= horizontalRange && movingRight)
+        {
+            movingRight = false;
+        }
+        else if (horizontalOffset <= -horizontalRange && !movingRight)
+        {
+            movingRight = true;
+        }
+
+        // Set velocity based on direction
+        float currentHorizontalSpeed = movingRight ? horizontalSpeed : -horizontalSpeed;
+        rb.linearVelocity = new Vector2(currentHorizontalSpeed, 0);
+    }
+
+    public void DropMissile()
+    {
+        if (canMove)
+        {
+            canMove = false;
+            rb.linearVelocity = new Vector2(0f, -verticalSpeed * 10f);
+
+            AudioManager.Instance.PlayMissileDropSound();
+        }
+    }
+
+    public void StopMovement()
+    {
+        rb.linearVelocity = new Vector2(0f, 0f);
+        canMove = false;
     }
 }

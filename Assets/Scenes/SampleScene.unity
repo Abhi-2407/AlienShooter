@@ -931,7 +931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d534c90dadf7a34987bfe8395ddc482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsSinglePlayer: 1
+  IsSinglePlayer: 0
   IsEasyMod: 0
   gameManager: {fileID: 1713237046}
   gameTimer: {fileID: 8338727}
@@ -2045,7 +2045,6 @@ MonoBehaviour:
   redButton: {fileID: 923118301}
   blueButton: {fileID: 1056166723}
   enemySpawner: {fileID: 0}
-  buttonCooldown: 1
   enableBotMode: 1
   botClickInterval: 2
   botClickRedButton: 1
@@ -5410,6 +5409,8 @@ MonoBehaviour:
   blueMissilePrefab: {fileID: 3032898203827653986, guid: 25e6345047f9f9b4ab6f5d20283c37d2, type: 3}
   redShipPrefab: {fileID: -1431810368034903958, guid: 2852ef9811727db4b9b0dc740ba2efcf, type: 3}
   redMissilePrefab: {fileID: -970939087554539246, guid: e32d0e100830a394f854a82730165051, type: 3}
+  blueMissile: {fileID: 0}
+  redMissile: {fileID: 0}
 --- !u!4 &1713237047
 Transform:
   m_ObjectHideFlags: 0
