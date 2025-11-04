@@ -40,20 +40,20 @@ public class RedEnemy : NetworkBehaviour
             {
                 if (Object.HasStateAuthority)
                 {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        Debug.LogError("Check");
-                        if (canMove)
-                        {
-                            rb.gravityScale = 10f;
-                            //rb.constraints = RigidbodyConstraints.FreezePositionX;
-                            rb.constraints = RigidbodyConstraints2D.FreezePositionX;
-                            canMove = false;
-                            //  rb.linearVelocity = new Vector2(0f, -verticalSpeed * 10f);
+                    //if (Input.GetMouseButtonDown(0))
+                    //{
+                    //    Debug.LogError("Check");
+                    //    if (canMove)
+                    //    {
+                    //        rb.gravityScale = 10f;
+                    //        //rb.constraints = RigidbodyConstraints.FreezePositionX;
+                    //        rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+                    //        canMove = false;
+                    //        //  rb.linearVelocity = new Vector2(0f, -verticalSpeed * 10f);
 
-                            AudioManager.Instance.PlayMissileDropSound();
-                        }
-                    }
+                    //        AudioManager.Instance.PlayMissileDropSound();
+                    //    }
+                    //}
 
                     if (GameManager.Instance.gameState == GameState.START)
                     {
@@ -90,13 +90,17 @@ public class RedEnemy : NetworkBehaviour
 
     public void DropMissile()
     {
-        if (canMove)
-        {
-            canMove = false;
-            rb.linearVelocity = new Vector2(0f, -verticalSpeed * 10f);
+        //if (canMove)
+        //{
+        //    canMove = false;
+        //    rb.linearVelocity = new Vector2(0f, -verticalSpeed * 10f);
 
-            AudioManager.Instance.PlayMissileDropSound();
-        }
+        //    AudioManager.Instance.PlayMissileDropSound();
+        //}
+
+        rb.gravityScale = 10f;
+        rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+        canMove = false;
     }
 
     public void StopMovement()
